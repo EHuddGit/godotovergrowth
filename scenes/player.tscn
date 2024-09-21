@@ -161,7 +161,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack2",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -246,17 +246,18 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vp8ga"]
-size = Vector2(14.5, 28)
+size = Vector2(12.625, 62)
 
 [node name="player" type="CharacterBody2D"]
 script = ExtResource("1_bs7md")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="playerBody" type="AnimatedSprite2D" parent="."]
+position = Vector2(8, -65)
+scale = Vector2(1.25, 1.25)
 sprite_frames = SubResource("SpriteFrames_8j76l")
-animation = &"walk"
-autoplay = "idle"
-frame_progress = 0.573303
+animation = &"idle"
+frame_progress = 0.897356
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-4.25, 24)
+position = Vector2(4.6875, -16)
 shape = SubResource("RectangleShape2D_vp8ga")

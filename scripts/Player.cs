@@ -9,25 +9,36 @@ public partial class Player : CharacterBody2D
 	public override void _PhysicsProcess(double delta)
 	{
 		Vector2 velocity = Velocity;
-
+		float direction = Input.GetAxis("left","right");
+		AnimatedSprite2D playerSprite = GetNode<AnimatedSprite2D>("playerBody");
 		// Add the gravity.
 		if (!IsOnFloor())
 		{
 			velocity += GetGravity() * (float)delta;
 		}
+		// flips the sprite based on which direction the player is moving
+		if(direction > 0)
+			playerSprite.FlipH = false;
+		else if(direction < 0)
+			playerSprite.FlipH = true;
 
-		// Handle Jump.
-		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
-		{
-			velocity.Y = JumpVelocity;
-		}
+		if(direction != 0)
+			playerSprite.Play("walk");
+		else if(Input.IsActionPressed("shoot"))
+			{
+				playerSprite.Play("attack");
+				GD.Print("attacking\n");
+			}
+		else
+			{
+				playerSprite.Play("idle");
+				GD.Print("idling\n");
+			}
 
-		// Get the input direction and handle the movement/deceleration.
-		// As good practice, you should replace UI actions with custom gameplay actions.
-		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-		if (direction != Vector2.Zero)
+		if (direction != 0)
 		{
-			velocity.X = direction.X * Speed;
+			
+			velocity.X = direction * Speed;
 		}
 		else
 		{
