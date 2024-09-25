@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://gcxxoqil4tkf"]
 
-[ext_resource type="Script" path="res://scenes/Bullet.cs" id="1_d4ev2"]
+[ext_resource type="Script" path="res://scripts/Bullet.cs" id="1_d4ev2"]
 [ext_resource type="Texture2D" uid="uid://dn0uaemlqb251" path="res://assets/All_Fire_Bullet_Pixel_16x16.png" id="1_sn8nt"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g7p6c"]

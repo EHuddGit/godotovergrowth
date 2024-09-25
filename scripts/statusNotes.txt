@@ -1,0 +1,10 @@
+player and bullet scenes:
+//need to move all animations to process and take them out of physics process
+// timing of the sprite shooting the bullet and the bullet coming out seems off
+// will need to add code to turn off the bullet created flag for when the animation switches from
+shooting to not shooting
+
+bullet scene:
+//bullet sprite needs to be flipped
+// will probably have to change when spawning bullet gets unlocked to run instead of signal when the animation is done
+// will have to change bullet's root node to something that can use collisions

@@ -4,27 +4,52 @@ using System;
 //need to move all animations to process and take them out of physics process
 // timing of the sprite shooting the bullet and the bullet coming out seems off
 //bullet sprite needs to be flipped
+// will probably have to change when spawning bullet gets unlocked to run instead of signal when the animation is done
+// will have to change bullet's root node to something that can use collisions
 public partial class Player : CharacterBody2D
 {
 	public const float Speed = 300.0f;
 	public const float JumpVelocity = -400.0f;
-    enum States {IDLE,WALKING,SHOOTING,RUNNING};
+    enum States {IDLE,WALKING,SHOOTING,RUNNING, COMMANDING};
+	private PackedScene bullet = ResourceLoader.Load<PackedScene>("res://scenes/bullet.tscn");
+
+	//flags
 	private States current = States.IDLE;
 	private bool finishedShot = false;
+	private bool finishedCommand = false;
 	private bool bulletFired = false;
-	private PackedScene bullet = ResourceLoader.Load<PackedScene>("res://scenes/bullet.tscn");
+	
+
+	//this function should also be running in the process function
 	public void stateChange(float direction)
 	{
 		
 		if(direction != 0 && ((current == States.SHOOTING && finishedShot == true) || current != States.SHOOTING))
 			current = States.WALKING;
+
 		else if(Input.IsActionPressed("shoot"))
 			current = States.SHOOTING;
-		else if((current == States.SHOOTING && finishedShot == true) || current != States.SHOOTING)
+
+		else if(Input.IsActionPressed("command"))
+			current = States.COMMANDING;
+
+		else
 		{
-			current = States.IDLE;
-			finishedShot = false;
+			if(current != States.SHOOTING && current != States.COMMANDING)
+				current = States.IDLE;
+			else if(current == States.SHOOTING && finishedShot == true)
+			{
+				current = States.IDLE;
+				finishedShot = false;
+				bulletFired = false;
+			}
+			else if(current == States.COMMANDING && finishedCommand == true)
+			{
+			 	current = States.IDLE;
+				finishedCommand = false;
+			}
 		}
+		
 	}
 
 	public void animations(float direction)
@@ -40,9 +65,12 @@ public partial class Player : CharacterBody2D
 		{
 			playerSprite.FlipH = true;
 		}
+		
 		//playing which animation based on the state
 		if(current == States.SHOOTING)
 			playerSprite.Play("attack");
+		else if(current == States.COMMANDING)
+			playerSprite.Play("command");
 		else if(current == States.WALKING)
 			playerSprite.Play("walk");
 		else
@@ -50,10 +78,19 @@ public partial class Player : CharacterBody2D
 	}
 	public void animationFinish()
 	{
-		finishedShot = true;
-		if(bulletFired == true)
-			bulletFired = false;
-		GD.Print("animation is finished\n");
+		if(current == States.SHOOTING)
+		{
+			GD.Print("shooting flags");
+			finishedShot = true;
+			if(bulletFired == true)
+				bulletFired = false;
+		}
+		else if(current == States.COMMANDING)
+		{
+			GD.Print("commanding flags");
+			finishedCommand = true;
+		}
+		// GD.Print("animation is finished\n");
 	}
 	public void bulletspawn()
 	{
@@ -86,6 +123,7 @@ public partial class Player : CharacterBody2D
 	}
 	public override void _PhysicsProcess(double delta)
 	{
+		//Engine.TimeScale = 0.25;
 		Vector2 velocity = Velocity;
 		float direction = Input.GetAxis("left","right");
 		
@@ -108,12 +146,5 @@ public partial class Player : CharacterBody2D
 		Velocity = velocity;
 		MoveAndSlide();
 	}
-
-	// public override void _PhysicsProcess(double delta)
-	// {
-	// 	//input to signal state change
-	// 	//change the state if needed
-	// 	//process the appropiate actions for current state
-	// }
 	
 }
