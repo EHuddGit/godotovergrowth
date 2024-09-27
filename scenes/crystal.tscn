@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=3 uid="uid://djdff6svxh48o"]
+
+[ext_resource type="Texture2D" uid="uid://naw2j5kqv1hn" path="res://assets/props/crystals/crystals_green/greenSprite.png" id="1_d0lbm"]
+[ext_resource type="Script" path="res://scripts/Crystal.cs" id="1_efbgv"]
+[ext_resource type="Shader" path="res://scenes/crystal.gdshader" id="2_xs1b6"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_inor3"]
+resource_local_to_scene = true
+shader = ExtResource("2_xs1b6")
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/onoff = 0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u50v8"]
+atlas = ExtResource("1_d0lbm")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6jyrt"]
+size = Vector2(300, 90)
+
+[node name="Crystal" type="Node2D"]
+script = ExtResource("1_efbgv")
+
+[node name="crystalSprite" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_inor3")
+texture = SubResource("AtlasTexture_u50v8")
+
+[node name="interactionZone" type="Area2D" parent="."]
+collision_mask = 9
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="interactionZone"]
+position = Vector2(0, 11)
+shape = SubResource("RectangleShape2D_6jyrt")
+
+[connection signal="body_entered" from="interactionZone" to="." method="interaction"]
+[connection signal="body_exited" from="interactionZone" to="." method="interaction"]

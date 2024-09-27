@@ -19,7 +19,10 @@ public partial class Player : CharacterBody2D
 	private bool finishedCommand = false;
 	private bool bulletFired = false;
 	
-
+	public override void _Ready()
+	{
+		Global.playerInstance = GetNode<AnimatedSprite2D>("playerBody");
+	}
 	//this function should also be running in the process function
 	public void stateChange(float direction)
 	{
@@ -65,7 +68,7 @@ public partial class Player : CharacterBody2D
 		{
 			playerSprite.FlipH = true;
 		}
-		
+
 		//playing which animation based on the state
 		if(current == States.SHOOTING)
 			playerSprite.Play("attack");

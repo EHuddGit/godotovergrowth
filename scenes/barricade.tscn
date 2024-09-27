@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://dyx6f0ndug2x8"]
+
+[ext_resource type="Texture2D" uid="uid://dua3ud4badaog" path="res://assets/props/village-props/TX Village Props.png" id="1_i7qfl"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0ul7b"]
+atlas = ExtResource("1_i7qfl")
+region = Rect2(0, 0, 1024, 1024)
+
+[node name="Barricade" type="Node2D"]
+
+[node name="barricade1" type="Sprite2D" parent="."]
+scale = Vector2(1, 0.97)
+texture = SubResource("AtlasTexture_0ul7b")
+region_enabled = true
+region_rect = Rect2(120, 24, 48, 48)

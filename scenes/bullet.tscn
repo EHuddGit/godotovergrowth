@@ -56,3 +56,8 @@ frame_progress = 0.501856
 position = Vector2(1, 0.5)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_nhne7")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(0.204022, 0.265887)
+rotation = 1.5708
+scale = Vector2(0.330444, 0.854852)

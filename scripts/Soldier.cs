@@ -44,23 +44,29 @@ public override void _Ready()
 			inRange = false;
 		else
 			inRange = true;
-		GD.Print("player nearby! flag is: " + inRange);
+		//GD.Print("player nearby! flag is: " + inRange);
 	}
 	 public void statesChange()
 	{
 		if(Input.IsActionPressed("command") && inRange)
 		{
-			current = States.FOLLOW;
+			
 			direction = 0;
 			
 			if(!following)
+			{
 				following = true;
+				current = States.FOLLOW;
+			}
+			else
+			{
+				following = false;
+				isWandering = false;
+				current = States.WANDER;
+				initialPosition = GetNode<AnimatedSprite2D>("soldierBody").GlobalPosition.X;
+			}
 		}
-		else if(!following)
-		{
-			current = States.WANDER;
-			initialPosition = GetNode<AnimatedSprite2D>("soldierBody").GlobalPosition.X;
-		}
+		
 		
 	}
 
@@ -109,25 +115,14 @@ public override void _Ready()
 	}
 	public void follow()
 	{
-		// not working since im not grabing the instance of the player and is grabbing the class?
-		//var player = GetNode<AnimatedSprite2D>("playerBody");
-		PackedScene playerScene = ResourceLoader.Load<PackedScene>("res://scenes/player.tscn");
 		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
-		var parent = GetParent();
-		var idk = playerScene.Instantiate();
-		GD.Print("this is the player" + (idk as Node2D).GlobalPosition.X);
-		//var body = player.GetNode<AnimatedSprite2D>("playerBody");
 		
-		//playerScene.GetNode<AnimatedSprite2D>("playerBody");
-		//player.Get
-		//player.FlipH = true;
-		//GD.Print(body.GlobalPosition.X);
 		if(!inRange)
 		{
-			// if(player.GlobalPosition.X > soldier.GlobalPosition.X)
-			// 	direction = 1;
-			// else
-			// 	direction = -1;
+			if(Global.playerInstance.GlobalPosition.X > soldier.GlobalPosition.X)
+			 	direction = 2;
+			 else
+			 	direction = -2;
 		}
 		else
 			direction = 0;
@@ -136,6 +131,7 @@ public override void _Ready()
 	//its stuttering when choosing to move twice
 	public void wandering()
 	{
+		
 		var timer = GetNode<Timer>("wanderTimer");
 		int[] distances = {25,50,75};
 		int[] directionChoice = {-1,1};
@@ -145,6 +141,7 @@ public override void _Ready()
 
 		if(wanderCurrent == WanderStates.IDLE)
 		{ 
+			//GD.Print("i am idle");
 			direction = 0;
 			if(!isWandering)
 			{
@@ -153,25 +150,26 @@ public override void _Ready()
 			}
 			else if(timer.IsStopped())
 			{
-				GD.Print("timer stopped");
+				//GD.Print("timer stopped");
 				wanderCurrent = WanderStates.MOVING;
 				isWandering = false;
 			}
 		}
 		else if(wanderCurrent == WanderStates.MOVING)
 		{
-	
+			//GD.Print("i am moving");
 			if(!isWandering)
 			{
 					
 				direction = directionChoice[GD.Randi() % 2];
-				GD.Print(direction);
+				//GD.Print(direction);
 				tempDistance = distances[GD.Randi() % 3];
+				// supposed to keep them within a 100 pixel distance of where they begin wandering
 				// // if((tempDistance * direction) + currentPosition  > initialPosition + (100 * direction))
 				// // 	direction = - direction;
 
 				futurePosition = (tempDistance * direction) + currentPosition;
-				GD.Print("current position: " + currentPosition +" next position: " + futurePosition);
+				//GD.Print("current position: " + currentPosition +" next position: " + futurePosition);
 				isWandering = true;	
 
 			}
@@ -181,14 +179,14 @@ public override void _Ready()
 				(direction == 1 && currentPosition >= futurePosition ))
 				{	
 					isWandering = false;
-					GD.Print("stopped moving");
+					//GD.Print("stopped moving");
 					wanderCurrent = WanderStates.IDLE;
 					
 				}	
 				
 			}
 		}
-		 GD.Print("future position: " + futurePosition + " direction: " + direction);
+		 //GD.Print("future position: " + futurePosition + " direction: " + direction);
 		
 		
 	}
