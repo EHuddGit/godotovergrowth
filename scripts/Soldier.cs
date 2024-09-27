@@ -110,15 +110,24 @@ public override void _Ready()
 	public void follow()
 	{
 		// not working since im not grabing the instance of the player and is grabbing the class?
-		var player = GetNode<AnimatedSprite2D>("playerBody");
+		//var player = GetNode<AnimatedSprite2D>("playerBody");
+		PackedScene playerScene = ResourceLoader.Load<PackedScene>("res://scenes/player.tscn");
 		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
-		GD.Print(player.GlobalPosition.X);
+		var parent = GetParent();
+		var idk = playerScene.Instantiate();
+		GD.Print("this is the player" + (idk as Node2D).GlobalPosition.X);
+		//var body = player.GetNode<AnimatedSprite2D>("playerBody");
+		
+		//playerScene.GetNode<AnimatedSprite2D>("playerBody");
+		//player.Get
+		//player.FlipH = true;
+		//GD.Print(body.GlobalPosition.X);
 		if(!inRange)
 		{
-			if(player.GlobalPosition.X > soldier.GlobalPosition.X)
-				direction = 1;
-			else
-				direction = -1;
+			// if(player.GlobalPosition.X > soldier.GlobalPosition.X)
+			// 	direction = 1;
+			// else
+			// 	direction = -1;
 		}
 		else
 			direction = 0;
