@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 //need to move all animations to process and take them out of physics process
 // timing of the sprite shooting the bullet and the bullet coming out seems off
@@ -18,10 +19,31 @@ public partial class Player : CharacterBody2D
 	private bool finishedShot = false;
 	private bool finishedCommand = false;
 	private bool bulletFired = false;
-	
+	private bool followed = false;
+	private bool signal = false;
+	private Sprite2D nearbyObject;
+
+	private List<AnimatedSprite2D> followers;
+	private Signals customSignals;
+	public void soldierFollowing(AnimatedSprite2D follower)
+	{
+		followed = true;
+		GD.Print("player has gained a follower");
+		
+	}
+	public void objectClose(Sprite2D interactable)
+	{
+		nearbyObject = interactable;
+		GD.Print("object nearby");
+	}
+
 	public override void _Ready()
 	{
 		Global.playerInstance = GetNode<AnimatedSprite2D>("playerBody");
+		customSignals = GetNode<Signals>("/root/Signals");
+		customSignals.followingPlayer += soldierFollowing;
+		customSignals.objectNearby += objectClose;
+		
 	}
 	//this function should also be running in the process function
 	public void stateChange(float direction)
@@ -33,9 +55,23 @@ public partial class Player : CharacterBody2D
 		else if(Input.IsActionPressed("shoot"))
 			current = States.SHOOTING;
 
-		else if(Input.IsActionPressed("command"))
+		else if(Input.IsActionJustPressed("command"))
+		{
 			current = States.COMMANDING;
-
+			if(!signal)
+			{
+				if(followed)
+				{
+					GD.Print("commanding to mine");
+					customSignals.EmitSignal(nameof(customSignals.playerCommandingMine),nearbyObject);
+					followed = false;
+				}
+				else
+					customSignals.EmitSignal(nameof(customSignals.playerCommanding));
+				signal = true;
+			}
+			
+		}
 		else
 		{
 			if(current != States.SHOOTING && current != States.COMMANDING)
@@ -92,6 +128,7 @@ public partial class Player : CharacterBody2D
 		{
 			GD.Print("commanding flags");
 			finishedCommand = true;
+			signal = false;
 		}
 		// GD.Print("animation is finished\n");
 	}

@@ -7,18 +7,27 @@ public partial class Bullet : Node2D
 	private int speed = 400;
 	[Export]
 	public float direction;
+	public float initialPosition;
+	public AnimatedSprite2D bullet;
 
+    public override void _Ready()
+    {
+        
+		bullet = GetNode<AnimatedSprite2D>("bulletBody");
+		initialPosition = bullet.GlobalPosition.X;
+    }
 
-	public override void _PhysicsProcess(double delta)
+    public override void _PhysicsProcess(double delta)
 	{
 		if(direction > 0)
 		{
-			GetNode<AnimatedSprite2D>("bulletBody").FlipH = false;
+			bullet.FlipH = false;
 		}
 		else if(direction < 0)
 		{
-			GetNode<AnimatedSprite2D>("bulletBody").FlipH = true;
+			bullet.FlipH = true;
 		}
 		MoveLocalX(direction * speed * (float)delta);
+		
 	}
 }

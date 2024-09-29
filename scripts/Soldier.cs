@@ -6,18 +6,28 @@ public partial class Soldier : CharacterBody2D
 	public const float Speed = 50.0f;
 	public const float JumpVelocity = -400.0f;
 
-	 enum States {IDLE,WANDER,FOLLOW,SHOOT};
+	 enum States {IDLE,WANDER,FOLLOW,SHOOT,GATHER};
 	 enum WanderStates {IDLE,MOVING};
-
+	 [Signal]
+    public delegate void FollowerEventHandler(AnimatedSprite2D follower);
 	 float initialPosition = 0;
 	 float futurePosition = 0;
 	 bool following = false;
 	 bool inRange = false;
 	 bool isWandering = false;
+	 bool isGathering = false;
 	 float direction = 0;
+	 bool registered = false;
+	 bool commanded = false;
+
 
 	States current = States.WANDER;
 	WanderStates wanderCurrent = WanderStates.MOVING;
+	private Signals customSignals;
+
+	Sprite2D resource;
+	
+
 
 public override void _Ready()
 {
@@ -25,14 +35,42 @@ public override void _Ready()
 	//area.Connect("body_shape_entered",playerEntered);
     //area.BodyEntered +=  playerEntered;
 	//timer.Timeout += OnTimerTimeout;
-   
+   customSignals = GetNode<Signals>("/root/Signals");
+   customSignals.playerCommanding += playerCommandFollow;
+   customSignals.playerCommandingMine += playerCommandMine;
 }
+	public void playerCommandFollow()
+	{
+		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
+		if(current != States.FOLLOW && inRange)
+		{
+			current = States.FOLLOW;
+			GD.Print("player has commanded soldier to follow");
+			customSignals.EmitSignal(nameof(customSignals.followingPlayer),soldier);
+		}
+		else
+		{
+			GD.Print("player has commanded soldier to wander");
+			isWandering = false;
+			current = States.WANDER;
+			initialPosition = GetNode<AnimatedSprite2D>("soldierBody").GlobalPosition.X;
+		}
+	}
+
+	public void playerCommandMine(Sprite2D mineable)
+	{
+		if(current == States.FOLLOW)
+		{
+		GD.Print("soldier is mining");
+		resource = mineable;
+		current = States.GATHER;
+		}
+	}
 
 	public override void _PhysicsProcess(double delta)
 	{
 		Vector2 velocity = Velocity;
 
-		statesChange();
 		movement(velocity,delta);
 		animations();
 		
@@ -40,36 +78,21 @@ public override void _Ready()
 
 	public void playerEntered(Node2D body)
 	{
+		var material = GetNode<AnimatedSprite2D>("soldierBody").Material;
 		if(inRange)
+		{
 			inRange = false;
+			(material as ShaderMaterial).SetShaderParameter("onoff", 0);
+		}
 		else
+		{
 			inRange = true;
+			if(!following)
+			(material as ShaderMaterial).SetShaderParameter("onoff", 1);
+		}
 		//GD.Print("player nearby! flag is: " + inRange);
 	}
-	 public void statesChange()
-	{
-		if(Input.IsActionPressed("command") && inRange)
-		{
-			
-			direction = 0;
-			
-			if(!following)
-			{
-				following = true;
-				current = States.FOLLOW;
-			}
-			else
-			{
-				following = false;
-				isWandering = false;
-				current = States.WANDER;
-				initialPosition = GetNode<AnimatedSprite2D>("soldierBody").GlobalPosition.X;
-			}
-		}
-		
-		
-	}
-
+	 
 	public void animations()
 	{
 		var body = GetNode<AnimatedSprite2D>("soldierBody");
@@ -84,6 +107,8 @@ public override void _Ready()
 
 		if(direction != 0)
 			body.Play("walk");
+		else if(isGathering)
+			body.Play("gather");
 		else
 			body.Play("idle");
 	}
@@ -104,6 +129,8 @@ public override void _Ready()
 			wandering();
 		else if(current == States.FOLLOW)
 			follow();
+		else if(current == States.GATHER)
+			gather();
 		
 		if (direction != 0)
 			velocity.X = direction * Speed;
@@ -113,9 +140,28 @@ public override void _Ready()
 		Velocity = velocity;
 		MoveAndSlide();
 	}
-	public void follow()
+
+	public void gather()
 	{
 		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
+		if( soldier.GlobalPosition.X < resource.GlobalPosition.X - 50 && soldier.GlobalPosition.X < resource.GlobalPosition.X + 50)
+			 	direction = 2;
+		else if(soldier.GlobalPosition.X > resource.GlobalPosition.X - 50 && soldier.GlobalPosition.X > resource.GlobalPosition.X + 50)
+			 	direction = -2;
+		else
+		{
+			direction = 0;
+			if(!isGathering)
+			{
+				isGathering = true;
+			}
+		}
+	}
+	public void follow()
+	{
+		//EmitSignal(SignalName.HealthChanged, oldHealth, _health);
+		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
+		//EmitSignal(SignalName.Follower,soldier);
 		
 		if(!inRange)
 		{
@@ -162,7 +208,6 @@ public override void _Ready()
 			{
 					
 				direction = directionChoice[GD.Randi() % 2];
-				//GD.Print(direction);
 				tempDistance = distances[GD.Randi() % 3];
 				// supposed to keep them within a 100 pixel distance of where they begin wandering
 				// // if((tempDistance * direction) + currentPosition  > initialPosition + (100 * direction))
@@ -179,16 +224,13 @@ public override void _Ready()
 				(direction == 1 && currentPosition >= futurePosition ))
 				{	
 					isWandering = false;
-					//GD.Print("stopped moving");
 					wanderCurrent = WanderStates.IDLE;
 					
 				}	
 				
 			}
 		}
-		 //GD.Print("future position: " + futurePosition + " direction: " + direction);
-		
-		
+	
 	}
 	
 }

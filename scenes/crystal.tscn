@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://djdff6svxh48o"]
+[gd_scene load_steps=8 format=3 uid="uid://djdff6svxh48o"]
 
 [ext_resource type="Texture2D" uid="uid://naw2j5kqv1hn" path="res://assets/props/crystals/crystals_green/greenSprite.png" id="1_d0lbm"]
 [ext_resource type="Script" path="res://scripts/Crystal.cs" id="1_efbgv"]
@@ -17,6 +17,9 @@ region = Rect2(0, 0, 128, 128)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6jyrt"]
 size = Vector2(300, 90)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rfgx8"]
+size = Vector2(128, 66)
+
 [node name="Crystal" type="Node2D"]
 script = ExtResource("1_efbgv")
 
@@ -30,6 +33,13 @@ collision_mask = 9
 [node name="CollisionShape2D" type="CollisionShape2D" parent="interactionZone"]
 position = Vector2(0, 11)
 shape = SubResource("RectangleShape2D_6jyrt")
+
+[node name="miningZone" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="miningZone"]
+position = Vector2(-0.5, 23)
+shape = SubResource("RectangleShape2D_rfgx8")
+debug_color = Color(0.149272, 0.556301, 0.872408, 0.42)
 
 [connection signal="body_entered" from="interactionZone" to="." method="interaction"]
 [connection signal="body_exited" from="interactionZone" to="." method="interaction"]
