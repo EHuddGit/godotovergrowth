@@ -11,8 +11,9 @@ shader_parameter/outline_color = Color(1, 1, 1, 1)
 shader_parameter/onoff = 0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u50v8"]
+resource_local_to_scene = true
 atlas = ExtResource("1_d0lbm")
-region = Rect2(0, 0, 128, 128)
+region = Rect2(0, 0, 640, 128)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6jyrt"]
 size = Vector2(300, 90)
@@ -26,6 +27,8 @@ script = ExtResource("1_efbgv")
 [node name="crystalSprite" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_inor3")
 texture = SubResource("AtlasTexture_u50v8")
+region_enabled = true
+region_rect = Rect2(0, 0, 128, 128)
 
 [node name="interactionZone" type="Area2D" parent="."]
 collision_mask = 9

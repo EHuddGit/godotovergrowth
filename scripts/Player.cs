@@ -25,6 +25,8 @@ public partial class Player : CharacterBody2D
 
 	private List<AnimatedSprite2D> followers;
 	private Signals customSignals;
+
+	//----------------------------signals---------------------------------------
 	public void soldierFollowing(AnimatedSprite2D follower)
 	{
 		followed = true;
@@ -36,7 +38,24 @@ public partial class Player : CharacterBody2D
 		nearbyObject = interactable;
 		GD.Print("object nearby");
 	}
+	public void animationFinish()
+	{
+		if(current == States.SHOOTING)
+		{
+			GD.Print("shooting flags");
+			finishedShot = true;
+			if(bulletFired == true)
+				bulletFired = false;
+		}
+		else if(current == States.COMMANDING)
+		{
+			GD.Print("commanding flags");
+			finishedCommand = true;
+			signal = false;
+		}
+	}
 
+//---------------------------loop functions----------------------------------------------
 	public override void _Ready()
 	{
 		Global.playerInstance = GetNode<AnimatedSprite2D>("playerBody");
@@ -44,6 +63,32 @@ public partial class Player : CharacterBody2D
 		customSignals.followingPlayer += soldierFollowing;
 		customSignals.objectNearby += objectClose;
 		
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		//Engine.TimeScale = 0.25;
+		Vector2 velocity = Velocity;
+		float direction = Input.GetAxis("left","right");
+		
+		// Add the gravity.
+		if (!IsOnFloor())
+		{
+			velocity += GetGravity() * (float)delta;
+		}
+
+		stateChange(direction);
+		animations(direction);
+		if(current == States.SHOOTING)
+			bulletspawn();
+
+		if (direction != 0)
+			velocity.X = direction * Speed;
+		else
+			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
+
+		Velocity = velocity;
+		MoveAndSlide();
 	}
 	//this function should also be running in the process function
 	public void stateChange(float direction)
@@ -115,23 +160,8 @@ public partial class Player : CharacterBody2D
 		else
 			playerSprite.Play("idle");
 	}
-	public void animationFinish()
-	{
-		if(current == States.SHOOTING)
-		{
-			GD.Print("shooting flags");
-			finishedShot = true;
-			if(bulletFired == true)
-				bulletFired = false;
-		}
-		else if(current == States.COMMANDING)
-		{
-			GD.Print("commanding flags");
-			finishedCommand = true;
-			signal = false;
-		}
-		// GD.Print("animation is finished\n");
-	}
+	
+	//------------------------helper functions-------------------------------------------
 	public void bulletspawn()
 	{
 		int direction = 0;
@@ -161,30 +191,6 @@ public partial class Player : CharacterBody2D
 			bulletFired = true;
 		}
 	}
-	public override void _PhysicsProcess(double delta)
-	{
-		//Engine.TimeScale = 0.25;
-		Vector2 velocity = Velocity;
-		float direction = Input.GetAxis("left","right");
-		
-		// Add the gravity.
-		if (!IsOnFloor())
-		{
-			velocity += GetGravity() * (float)delta;
-		}
-
-		stateChange(direction);
-		animations(direction);
-		if(current == States.SHOOTING)
-			bulletspawn();
-
-		if (direction != 0)
-			velocity.X = direction * Speed;
-		else
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
-
-		Velocity = velocity;
-		MoveAndSlide();
-	}
+	
 	
 }

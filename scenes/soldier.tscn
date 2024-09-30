@@ -290,7 +290,7 @@ scale = Vector2(1.25, 1.25)
 sprite_frames = SubResource("SpriteFrames_ukkis")
 animation = &"shoot"
 autoplay = "idle"
-frame_progress = 0.895516
+frame_progress = 0.21318
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(7, 49)

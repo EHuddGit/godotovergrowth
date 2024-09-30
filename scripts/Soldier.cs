@@ -8,8 +8,7 @@ public partial class Soldier : CharacterBody2D
 
 	 enum States {IDLE,WANDER,FOLLOW,SHOOT,GATHER};
 	 enum WanderStates {IDLE,MOVING};
-	 [Signal]
-    public delegate void FollowerEventHandler(AnimatedSprite2D follower);
+
 	 float initialPosition = 0;
 	 float futurePosition = 0;
 	 bool following = false;
@@ -19,8 +18,6 @@ public partial class Soldier : CharacterBody2D
 	 float direction = 0;
 	 bool registered = false;
 	 bool commanded = false;
-
-
 	States current = States.WANDER;
 	WanderStates wanderCurrent = WanderStates.MOVING;
 	private Signals customSignals;
@@ -31,14 +28,19 @@ public partial class Soldier : CharacterBody2D
 
 public override void _Ready()
 {
-    //var area = GetNode<Area2D>("commandArea");
-	//area.Connect("body_shape_entered",playerEntered);
-    //area.BodyEntered +=  playerEntered;
-	//timer.Timeout += OnTimerTimeout;
    customSignals = GetNode<Signals>("/root/Signals");
    customSignals.playerCommanding += playerCommandFollow;
    customSignals.playerCommandingMine += playerCommandMine;
 }
+
+public override void _PhysicsProcess(double delta)
+	{
+		Vector2 velocity = Velocity;
+
+		movement(velocity,delta);
+		animations();
+		
+	}
 	public void playerCommandFollow()
 	{
 		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
@@ -61,19 +63,10 @@ public override void _Ready()
 	{
 		if(current == States.FOLLOW)
 		{
-		GD.Print("soldier is mining");
-		resource = mineable;
-		current = States.GATHER;
+			GD.Print("soldier is mining");
+			resource = mineable;
+			current = States.GATHER;
 		}
-	}
-
-	public override void _PhysicsProcess(double delta)
-	{
-		Vector2 velocity = Velocity;
-
-		movement(velocity,delta);
-		animations();
-		
 	}
 
 	public void playerEntered(Node2D body)
@@ -144,6 +137,7 @@ public override void _Ready()
 	public void gather()
 	{
 		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
+		var timer = GetNode<Timer>("GatherTimer");
 		if( soldier.GlobalPosition.X < resource.GlobalPosition.X - 50 && soldier.GlobalPosition.X < resource.GlobalPosition.X + 50)
 			 	direction = 2;
 		else if(soldier.GlobalPosition.X > resource.GlobalPosition.X - 50 && soldier.GlobalPosition.X > resource.GlobalPosition.X + 50)
@@ -154,6 +148,17 @@ public override void _Ready()
 			if(!isGathering)
 			{
 				isGathering = true;
+				timer.Start(3);
+				GD.Print("gathering started!");
+			}
+			else
+			{
+				if(timer.IsStopped())
+				{
+					customSignals.EmitSignal(nameof(customSignals.resourceMined),resource);
+					timer.Start(3);
+					GD.Print("gathering restarted!");
+				}
 			}
 		}
 	}
