@@ -107,8 +107,15 @@ public partial class Player : CharacterBody2D
 			{
 				if(followed)
 				{
-					GD.Print("commanding to mine");
-					customSignals.EmitSignal(nameof(customSignals.playerCommandingMine),nearbyObject);
+					if(nearbyObject != null)
+					{
+						if(GetNode<AnimatedSprite2D>("playerBody").GlobalPosition.X < nearbyObject.GlobalPosition.X + 150 &&
+						GetNode<AnimatedSprite2D>("playerBody").GlobalPosition.X > nearbyObject.GlobalPosition.X - 150 )
+						{
+							GD.Print("commanding to mine");
+							customSignals.EmitSignal(nameof(customSignals.playerCommandingMine),nearbyObject);
+						}
+					}
 					followed = false;
 				}
 				else

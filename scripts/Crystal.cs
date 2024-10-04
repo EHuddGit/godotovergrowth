@@ -31,11 +31,12 @@ public partial class Crystal : Node2D
 	{
 		if(resource == GetNode<Sprite2D>("crystalSprite"))
 		{
-			resources -= 10;
-			if(currentFrame != 4)
+			resources -= 5;
+			if(currentFrame != 4 && resources % 20 == 0)
 				currentFrame++;
 			GD.Print("resource gathered! crystal at " + resources + " durabilty");
 			GetNode<Sprite2D>("crystalSprite").RegionRect = spriteRects[currentFrame];
+			customSignals.EmitSignal(nameof(customSignals.resourceModify),5,true);
 		}
 	}
 	public override void _Ready()

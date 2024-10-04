@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://djdff6svxh48o" path="res://scenes/crystal.tscn" id="1_k6ued"]
 [ext_resource type="Texture2D" uid="uid://7k3nsdphqrly" path="res://assets/background/mainlev_build.png" id="2_ci43u"]
 [ext_resource type="PackedScene" uid="uid://c7wfkx1lqu85o" path="res://scenes/soldier.tscn" id="3_snfkc"]
+[ext_resource type="PackedScene" uid="uid://boapd4hva4yrk" path="res://scenes/resourceCounter.tscn" id="5_b5ecb"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qpcv7"]
 texture = ExtResource("2_ci43u")
@@ -921,8 +922,6 @@ physics_layer_0/collision_layer = 11
 physics_layer_0/collision_mask = 3
 sources/0 = SubResource("TileSetAtlasSource_qpcv7")
 
-[sub_resource type="LabelSettings" id="LabelSettings_03rvs"]
-
 [node name="game" type="Node2D"]
 
 [node name="GameManager" type="Node" parent="."]
@@ -952,10 +951,8 @@ layer_0/tile_data = PackedInt32Array(262143, 1376256, 22, 327679, 1376256, 23, 3
 [node name="Camera2D" type="Camera2D" parent="player"]
 position = Vector2(4, -43)
 
-[node name="Label" type="Label" parent="player/Camera2D"]
-offset_left = 444.0
-offset_top = -309.0
-offset_right = 553.0
-offset_bottom = -286.0
-text = "Crystals: 0"
-label_settings = SubResource("LabelSettings_03rvs")
+[node name="resourceCounter" parent="player/Camera2D" instance=ExtResource("5_b5ecb")]
+offset_left = 468.0
+offset_top = -324.0
+offset_right = 566.0
+offset_bottom = -301.0

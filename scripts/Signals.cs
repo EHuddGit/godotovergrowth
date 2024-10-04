@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.ComponentModel;
 
 public partial class Signals : Node
 {
@@ -15,5 +16,7 @@ public partial class Signals : Node
     public delegate void resourceMinedEventHandler(Sprite2D resource);
     [Signal]
     public delegate void soldierMiningEventHandler(AnimatedSprite2D soldier);
+    [Signal]
+    public delegate void resourceModifyEventHandler(int amount,bool isAdd);
     
 }

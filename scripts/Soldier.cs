@@ -47,6 +47,8 @@ public override void _PhysicsProcess(double delta)
 		if(current != States.FOLLOW && inRange)
 		{
 			current = States.FOLLOW;
+			if(isGathering)
+				isGathering = false;
 			GD.Print("player has commanded soldier to follow");
 			customSignals.EmitSignal(nameof(customSignals.followingPlayer),soldier);
 		}
@@ -57,6 +59,7 @@ public override void _PhysicsProcess(double delta)
 			current = States.WANDER;
 			initialPosition = GetNode<AnimatedSprite2D>("soldierBody").GlobalPosition.X;
 		}
+		GD.Print("status: " + current);
 	}
 
 	public void playerCommandMine(Sprite2D mineable)
