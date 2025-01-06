@@ -7,9 +7,9 @@ public partial class Signals : Node
     [Signal]
     public delegate void playerCommandingEventHandler();
     [Signal]
-    public delegate void playerCommandingMineEventHandler(Sprite2D crystal);
+    public delegate void playerCommandingMineEventHandler(string pathID, Sprite2D mineable);
     [Signal]
-    public delegate void followingPlayerEventHandler(AnimatedSprite2D follower);
+    public delegate void followingPlayerEventHandler(string pathID);
     [Signal]
     public delegate void objectNearbyEventHandler(Sprite2D nearbyObject);
     [Signal]

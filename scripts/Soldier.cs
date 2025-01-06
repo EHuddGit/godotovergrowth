@@ -8,6 +8,7 @@ public partial class Soldier : CharacterBody2D
 
 	 enum States {IDLE,WANDER,FOLLOW,SHOOT,GATHER};
 	 enum WanderStates {IDLE,MOVING};
+	 enum CommandStates{FOLLOW,MINE,NONE};
 
 	 float initialPosition = 0;
 	 float futurePosition = 0;
@@ -20,6 +21,7 @@ public partial class Soldier : CharacterBody2D
 	 bool commanded = false;
 	States current = States.WANDER;
 	WanderStates wanderCurrent = WanderStates.MOVING;
+	CommandStates commandCurrent = CommandStates.NONE;
 	private Signals customSignals;
 
 	Sprite2D resource;
@@ -31,6 +33,7 @@ public override void _Ready()
    customSignals = GetNode<Signals>("/root/Signals");
    customSignals.playerCommanding += playerCommandFollow;
    customSignals.playerCommandingMine += playerCommandMine;
+   GD.Print( this.GetPath());
 }
 
 public override void _PhysicsProcess(double delta)
@@ -41,36 +44,46 @@ public override void _PhysicsProcess(double delta)
 		animations();
 		
 	}
-	public void playerCommandFollow()
+	
+	public void playerCommandMine(string pathID, Sprite2D mineable)
 	{
-		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
-		if(current != States.FOLLOW && inRange)
-		{
-			current = States.FOLLOW;
-			if(isGathering)
-				isGathering = false;
-			GD.Print("player has commanded soldier to follow");
-			customSignals.EmitSignal(nameof(customSignals.followingPlayer),soldier);
-		}
-		else
-		{
-			GD.Print("player has commanded soldier to wander");
-			isWandering = false;
-			current = States.WANDER;
-			initialPosition = GetNode<AnimatedSprite2D>("soldierBody").GlobalPosition.X;
-		}
-		GD.Print("status: " + current);
-	}
-
-	public void playerCommandMine(Sprite2D mineable)
-	{
-		if(current == States.FOLLOW)
+		GD.Print("soldier commanded to mine");
+		GD.Print("soldier state: " + current);
+		if(current == States.FOLLOW && this.GetPath() == pathID)
 		{
 			GD.Print("soldier is mining");
 			resource = mineable;
 			current = States.GATHER;
 		}
 	}
+	public void playerCommandFollow()
+	{
+		GD.Print("soldier recieved command");
+		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
+		//turns off the wandering or gathering animations
+		//isGathering = false;
+		
+	
+		if(inRange)
+		{
+			isWandering = false;
+			if(current != States.FOLLOW)
+			{
+				current = States.FOLLOW;
+				GD.Print("player has commanded soldier to follow");
+				customSignals.EmitSignal(nameof(customSignals.followingPlayer),this.GetPath());
+			}
+			else
+			{
+				GD.Print("player has commanded soldier to wander");
+				current = States.WANDER;
+				initialPosition = GetNode<AnimatedSprite2D>("soldierBody").GlobalPosition.X;
+			}
+			GD.Print("status: " + current);
+		}
+		
+	}
+
 
 	public void playerEntered(Node2D body)
 	{
@@ -86,7 +99,6 @@ public override void _PhysicsProcess(double delta)
 			if(!following)
 			(material as ShaderMaterial).SetShaderParameter("onoff", 1);
 		}
-		//GD.Print("player nearby! flag is: " + inRange);
 	}
 	 
 	public void animations()

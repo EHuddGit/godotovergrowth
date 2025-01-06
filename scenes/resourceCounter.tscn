@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://boapd4hva4yrk"]
 
-[ext_resource type="Script" path="res://ResourceCounter.cs" id="1_uavu8"]
+[ext_resource type="Script" path="res://scripts/ResourceCounter.cs" id="1_uavu8"]
 
 [node name="resourceCounter" type="Label"]
 offset_right = 40.0
