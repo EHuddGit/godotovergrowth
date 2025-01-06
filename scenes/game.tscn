@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cfox3cpyg8mwq"]
+[gd_scene load_steps=11 format=3 uid="uid://cfox3cpyg8mwq"]
 
 [ext_resource type="PackedScene" uid="uid://b03r5xx8dpl3q" path="res://scenes/player.tscn" id="1_6thgj"]
 [ext_resource type="PackedScene" uid="uid://djdff6svxh48o" path="res://scenes/crystal.tscn" id="1_k6ued"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://7k3nsdphqrly" path="res://assets/background/mainlev_build.png" id="2_ci43u"]
 [ext_resource type="PackedScene" uid="uid://c7wfkx1lqu85o" path="res://scenes/soldier.tscn" id="3_snfkc"]
 [ext_resource type="PackedScene" uid="uid://boapd4hva4yrk" path="res://scenes/resourceCounter.tscn" id="5_b5ecb"]
+[ext_resource type="PackedScene" uid="uid://dyx6f0ndug2x8" path="res://scenes/barricade.tscn" id="7_bmf3n"]
 
 [sub_resource type="CSharpScript" id="CSharpScript_o0sy3"]
 script/source = "using Godot;
@@ -969,3 +970,6 @@ offset_left = 468.0
 offset_top = -324.0
 offset_right = 566.0
 offset_bottom = -301.0
+
+[node name="Barricade" parent="." instance=ExtResource("7_bmf3n")]
+position = Vector2(1181, 66)

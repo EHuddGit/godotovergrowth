@@ -12,13 +12,15 @@ size = Vector2(35, 49)
 [node name="Barricade" type="Node2D"]
 
 [node name="barricade1" type="Sprite2D" parent="."]
-scale = Vector2(1, 0.97)
+position = Vector2(5.96046e-08, -32)
+scale = Vector2(1.25, 1.25)
 texture = SubResource("AtlasTexture_0ul7b")
 region_enabled = true
-region_rect = Rect2(120, 24, 48, 48)
+region_rect = Rect2(872, 16, 48, 48)
 
 [node name="Barricade" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Barricade"]
-position = Vector2(0.5, -9)
+visible = false
+position = Vector2(0, -10)
 shape = SubResource("RectangleShape2D_gupcd")
