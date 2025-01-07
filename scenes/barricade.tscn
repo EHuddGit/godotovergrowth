@@ -1,5 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://dyx6f0ndug2x8"]
+[gd_scene load_steps=5 format=3 uid="uid://dyx6f0ndug2x8"]
 
+[ext_resource type="Script" path="res://scripts/Barricade.cs" id="1_36p03"]
 [ext_resource type="Texture2D" uid="uid://dua3ud4badaog" path="res://assets/props/village-props/TX Village Props.png" id="1_i7qfl"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0ul7b"]
@@ -10,6 +11,7 @@ region = Rect2(0, 0, 1024, 1024)
 size = Vector2(35, 49)
 
 [node name="Barricade" type="Node2D"]
+script = ExtResource("1_36p03")
 
 [node name="barricade1" type="Sprite2D" parent="."]
 position = Vector2(5.96046e-08, -32)

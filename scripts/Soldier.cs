@@ -61,9 +61,8 @@ public override void _PhysicsProcess(double delta)
 		GD.Print("soldier recieved command");
 		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
 		//turns off the wandering or gathering animations
-		//isGathering = false;
+		isGathering = false;
 		
-	
 		if(inRange)
 		{
 			isWandering = false;
