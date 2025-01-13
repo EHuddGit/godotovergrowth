@@ -1,17 +1,19 @@
 using Godot;
+using Godot.Collections;
 using System;
 using System.ComponentModel;
 
 public partial class Signals : Node
 {
+    public enum COMMANDS {MINING = 1, GUARDING};
     [Signal]
     public delegate void playerCommandingEventHandler();
     [Signal]
-    public delegate void playerCommandingMineEventHandler(string pathID, Sprite2D mineable);
+    public delegate void playerCommandingObjectEventHandler(string pathID, Sprite2D obj,COMMANDS command, float xOffset);
     [Signal]
     public delegate void followingPlayerEventHandler(string pathID);
     [Signal]
-    public delegate void objectNearbyEventHandler(Sprite2D nearbyObject);
+    public delegate void objectNearbyEventHandler(Sprite2D nearbyObject,Array<bool> followerspots);
     [Signal]
     public delegate void resourceMinedEventHandler(Sprite2D resource);
     [Signal]

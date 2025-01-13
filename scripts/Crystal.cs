@@ -7,6 +7,7 @@ public partial class Crystal : Node2D
 	private bool proximity = false;
 	private bool beingMined = false;
 	private Signals customSignals;
+	public Godot.Collections.Array<bool> followerSpots =  new Godot.Collections.Array<bool>{false,false};
 	private int resources = 100;
 	private int currentFrame = 0;
 	private Rect2[] spriteRects = {new Rect2(0f,0f,128f,128f), new Rect2(128f,0f,128f,128f),new Rect2(256f,0f,128f,128f),new Rect2(384f,0f,128f,128f),new Rect2(512f,0f,128f,128f)};
@@ -18,7 +19,7 @@ public partial class Crystal : Node2D
 		{
 			proximity = false;
 			(crystal.Material as ShaderMaterial).SetShaderParameter("onoff", 1);
-			customSignals.EmitSignal(nameof(customSignals.objectNearby),crystal);
+			customSignals.EmitSignal(nameof(customSignals.objectNearby),crystal, followerSpots);
 		}
 		else
 		{

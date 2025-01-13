@@ -1,28 +1,49 @@
-[gd_scene load_steps=5 format=3 uid="uid://dyx6f0ndug2x8"]
+[gd_scene load_steps=8 format=3 uid="uid://dyx6f0ndug2x8"]
 
-[ext_resource type="Script" path="res://scripts/Barricade.cs" id="1_36p03"]
 [ext_resource type="Texture2D" uid="uid://dua3ud4badaog" path="res://assets/props/village-props/TX Village Props.png" id="1_i7qfl"]
+[ext_resource type="Script" path="res://scripts/Barricade.cs" id="1_jnp3u"]
+[ext_resource type="Shader" path="res://assets/crystal.gdshader" id="2_r611y"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i5jnn"]
+resource_local_to_scene = true
+shader = ExtResource("2_r611y")
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/onoff = 0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0ul7b"]
 atlas = ExtResource("1_i7qfl")
 region = Rect2(0, 0, 1024, 1024)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q20wm"]
+size = Vector2(300, 90)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gupcd"]
-size = Vector2(35, 49)
+size = Vector2(56, 90)
 
 [node name="Barricade" type="Node2D"]
-script = ExtResource("1_36p03")
+script = ExtResource("1_jnp3u")
 
-[node name="barricade1" type="Sprite2D" parent="."]
+[node name="barricadeSprite" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_i5jnn")
 position = Vector2(5.96046e-08, -32)
 scale = Vector2(1.25, 1.25)
 texture = SubResource("AtlasTexture_0ul7b")
 region_enabled = true
 region_rect = Rect2(872, 16, 48, 48)
 
-[node name="Barricade" type="Area2D" parent="."]
+[node name="interactionZone" type="Area2D" parent="."]
+collision_mask = 9
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Barricade"]
-visible = false
-position = Vector2(0, -10)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="interactionZone"]
+position = Vector2(1, -45)
+shape = SubResource("RectangleShape2D_q20wm")
+debug_color = Color(0.191414, 0.533948, 0.937698, 0.42)
+
+[node name="collisionZone" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="collisionZone"]
+position = Vector2(-1, -45)
 shape = SubResource("RectangleShape2D_gupcd")
+
+[connection signal="body_entered" from="interactionZone" to="." method="interaction"]
+[connection signal="body_exited" from="interactionZone" to="." method="interaction"]

@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 //need to move all animations to process and take them out of physics process
 // timing of the sprite shooting the bullet and the bullet coming out seems off
@@ -23,7 +24,7 @@ public partial class Player : CharacterBody2D
 	private bool bulletFired = false;
 	private bool signal = false;
 	private Sprite2D nearbyObject;
-
+	private Godot.Collections.Array<bool> objectFollowerSpots;
 	private List<string> followers;
 	private Signals customSignals;
 
@@ -37,9 +38,10 @@ public partial class Player : CharacterBody2D
 		GD.Print("follower path:" + pathid);
 
 	}
-	public void objectClose(Sprite2D interactable)
+	public void objectClose(Sprite2D interactable, Godot.Collections.Array<bool> followerSpots)
 	{
 		nearbyObject = interactable;
+		objectFollowerSpots = followerSpots;
 		GD.Print("object nearby");
 	}
 	public void animationFinish()
@@ -138,25 +140,44 @@ public partial class Player : CharacterBody2D
 	public void playerCommand()
 	{
 		GD.Print("amount of followers: " + followers.Count);
+		Signals.COMMANDS comm = Signals.COMMANDS.GUARDING;
+		int index = 0;
 
+		if(nearbyObject == null)
+		{
+			GD.Print("object is null");
+		}
 		if (nearbyObject != null && followers.Count > 0)
 		{
+			GD.Print("made it to here1");
 			if (GetNode<AnimatedSprite2D>("playerBody").GlobalPosition.X < nearbyObject.GlobalPosition.X + 150 &&
 			GetNode<AnimatedSprite2D>("playerBody").GlobalPosition.X > nearbyObject.GlobalPosition.X - 150)
 			{
-				for (int index = 0; index < followers.Count; index++)
+				GD.Print("made it to here2");
+				if(nearbyObject.GetPath().ToString().Contains("Crystal"))
 				{
-					
-					GD.Print("commanding to mine");
-					customSignals.EmitSignal(nameof(customSignals.playerCommandingMine),followers[index], nearbyObject);
-					followers.Remove(followers[index]);
+					comm = Signals.COMMANDS.MINING;
 				}
+				else if(nearbyObject.GetPath().ToString().Contains("Barricade"))
+				{
+					comm = Signals.COMMANDS.GUARDING;
+				}
+				
+
+				while(objectFollowerSpots[index] != false || index >= objectFollowerSpots.Count)
+				{
+					index++;
+				}
+				
+				GD.Print("player told soldier to mine/guard");
+				customSignals.EmitSignal(nameof(customSignals.playerCommandingObject),followers[0], nearbyObject,(int)comm, index * 75);
+				followers.Remove(followers[0]);
 			}
 		}
 		else
 		{
 
-			GD.Print("follow command");
+			GD.Print("follow/wander command");
 			customSignals.EmitSignal(nameof(customSignals.playerCommanding));
 		}
 
