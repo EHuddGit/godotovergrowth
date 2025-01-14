@@ -15,6 +15,7 @@ public partial class Soldier : CharacterBody2D
 	public enum WanderDirections{LEFT,RIGHT,BOTH};
 
 	 static float initialPosition = 0;
+	 float offset = 0;
 	 float futurePosition = 0;
 	 bool following = false;
 	 bool inRange = false;
@@ -52,7 +53,7 @@ public override void _PhysicsProcess(double delta)
 	
 	//a signal function that is triggered by a player sending a command to a soldier following the player
 	//depending on the object the soldier will either mine or guard
-	public void playerCommandObject(string pathID, Sprite2D Obj, Signals.COMMANDS command, float offset)
+	public void playerCommandObject(string pathID, Sprite2D Obj, Signals.COMMANDS command, float Offset)
 	{
 		GD.Print("soldier commanded to an object");
 		GD.Print("soldier state: " + current);
@@ -68,8 +69,10 @@ public override void _PhysicsProcess(double delta)
 			{
 				GD.Print("soldier is guarding");
 				current = States.GUARD;
-				initialPosition = Obj.GlobalPosition.X + offset;
-				GD.Print("object position:" + Obj.GlobalPosition.X + offset);
+				initialPosition = Obj.GlobalPosition.X + Offset;
+				offset = Offset;
+				GD.Print("command offset: " + Offset);
+				GD.Print("object position:" + Obj.GlobalPosition.X + Offset);
 			}
 			
 		}
@@ -157,10 +160,7 @@ public override void _PhysicsProcess(double delta)
 		else if(current == States.GATHER)
 			gather();
 		else if(current == States.GUARD)
-		{ // i think seek is the issue for guarding
-			seek();
-			
-		}
+			guard();
 			
 		
 		if (direction != 0)
@@ -172,22 +172,40 @@ public override void _PhysicsProcess(double delta)
 		MoveAndSlide();
 	}
 
+	public void guard()
+	{
+		if (seek(10))
+		{
+			direction = 0;
+			var body = GetNode<AnimatedSprite2D>("soldierBody");
+			float facing = body.GlobalPosition.X - (obj.GlobalPosition.X + offset);
+			if(facing > 0)
+				body.FlipH = false;
+			else if(facing < 0)
+				body.FlipH = true;
+		}
+	}
+
 	public bool seek(float objRange = objectRange)
 	{
 		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
 		bool withinRange = false;
-		if( soldier.GlobalPosition.X < obj.GlobalPosition.X - objRange && soldier.GlobalPosition.X < obj.GlobalPosition.X + objRange)
+		float target = obj.GlobalPosition.X + offset;
+		//GD.Print("offset: " + offset);
+		if( soldier.GlobalPosition.X < target - objRange && soldier.GlobalPosition.X < target + objRange)
 		{
 			direction = 2;
 			withinRange = false;
 		}
-		else if(soldier.GlobalPosition.X > obj.GlobalPosition.X - objRange && soldier.GlobalPosition.X > obj.GlobalPosition.X + objRange)
+		else if(soldier.GlobalPosition.X > target - objRange && soldier.GlobalPosition.X > target + objRange)
 		{
 			direction = -2;
 			withinRange = false;
 		}
 		else
+		{
 			withinRange = true;
+		}
 
 		return withinRange;
 			 

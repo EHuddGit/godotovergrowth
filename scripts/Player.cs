@@ -170,7 +170,7 @@ public partial class Player : CharacterBody2D
 				}
 				
 				GD.Print("player told soldier to mine/guard");
-				customSignals.EmitSignal(nameof(customSignals.playerCommandingObject),followers[0], nearbyObject,(int)comm, index * 75);
+				customSignals.EmitSignal(nameof(customSignals.playerCommandingObject),followers[0], nearbyObject,(int)comm, (index + 1) * -75);
 				followers.Remove(followers[0]);
 			}
 		}
