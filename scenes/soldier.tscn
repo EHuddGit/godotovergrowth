@@ -288,9 +288,9 @@ material = SubResource("ShaderMaterial_2btlm")
 position = Vector2(6, 0)
 scale = Vector2(1.25, 1.25)
 sprite_frames = SubResource("SpriteFrames_ukkis")
-animation = &"shoot"
+animation = &"dead"
 autoplay = "idle"
-frame_progress = 0.769179
+frame_progress = 0.187436
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(7, 49)
