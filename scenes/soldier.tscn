@@ -238,7 +238,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_6jprt")
 }],
-"loop": true,
+"loop": false,
 "name": &"shoot",
 "speed": 10.0
 }, {
@@ -288,9 +288,8 @@ material = SubResource("ShaderMaterial_2btlm")
 position = Vector2(6, 0)
 scale = Vector2(1.25, 1.25)
 sprite_frames = SubResource("SpriteFrames_ukkis")
-animation = &"dead"
+animation = &"shoot"
 autoplay = "idle"
-frame_progress = 0.187436
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(7, 49)
@@ -314,5 +313,16 @@ one_shot = true
 wait_time = 2.0
 one_shot = true
 
+[node name="enemyTriggerRayCast" type="RayCast2D" parent="."]
+modulate = Color(0.401802, 0.427756, 0.157414, 1)
+position = Vector2(0, 40)
+target_position = Vector2(200, -1)
+collision_mask = 11
+
+[node name="bulletspawn" type="Marker2D" parent="."]
+position = Vector2(42.5, 23.3935)
+scale = Vector2(1.25, 1.25)
+
+[connection signal="animation_finished" from="soldierBody" to="." method="animationFinished"]
 [connection signal="body_entered" from="commandArea" to="." method="playerEntered"]
 [connection signal="body_exited" from="commandArea" to="." method="playerEntered"]

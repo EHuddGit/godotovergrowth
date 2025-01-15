@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cfox3cpyg8mwq"]
+[gd_scene load_steps=12 format=3 uid="uid://cfox3cpyg8mwq"]
 
 [ext_resource type="PackedScene" uid="uid://b03r5xx8dpl3q" path="res://scenes/player.tscn" id="1_6thgj"]
 [ext_resource type="PackedScene" uid="uid://djdff6svxh48o" path="res://scenes/crystal.tscn" id="1_k6ued"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://c7wfkx1lqu85o" path="res://scenes/soldier.tscn" id="3_snfkc"]
 [ext_resource type="PackedScene" uid="uid://boapd4hva4yrk" path="res://scenes/resourceCounter.tscn" id="5_b5ecb"]
 [ext_resource type="PackedScene" uid="uid://dyx6f0ndug2x8" path="res://scenes/barricade.tscn" id="7_bmf3n"]
+[ext_resource type="PackedScene" uid="uid://cc4hhly4bxsu8" path="res://scenes/enemy.tscn" id="8_kxfym"]
 
 [sub_resource type="CSharpScript" id="CSharpScript_o0sy3"]
 script/source = "using Godot;
@@ -962,7 +963,7 @@ visible = false
 position = Vector2(-261, -34)
 
 [node name="soldier" parent="soldiers" instance=ExtResource("3_snfkc")]
-position = Vector2(997, -52)
+position = Vector2(997, -17)
 
 [node name="player" parent="." instance=ExtResource("1_6thgj")]
 
@@ -974,3 +975,6 @@ offset_left = 468.0
 offset_top = -324.0
 offset_right = 566.0
 offset_bottom = -301.0
+
+[node name="Enemy" parent="." instance=ExtResource("8_kxfym")]
+position = Vector2(1452, 63)

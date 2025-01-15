@@ -8,6 +8,7 @@ public partial class Soldier : CharacterBody2D
 
 	public const float WanderDistance = 100.0f;
 	public const float objectRange = 50.0f;
+	private PackedScene bullet = ResourceLoader.Load<PackedScene>("res://scenes/bullet.tscn");
 
 	 enum States {IDLE,WANDER,FOLLOW,SHOOT,GATHER,SEEK,GUARD};
 	 enum WanderStates {IDLE,MOVING};
@@ -21,6 +22,9 @@ public partial class Soldier : CharacterBody2D
 	 bool inRange = false;
 	 bool isWandering = false;
 	 bool isGathering = false;
+	 bool enemyDetected = false;
+	bool bulletFired = false;
+	bool animationFinish = false;
 	 float direction = 0;
 	 bool registered = false;
 	 bool commanded = false;
@@ -45,6 +49,28 @@ public override void _Ready()
 public override void _PhysicsProcess(double delta)
 	{
 		Vector2 velocity = Velocity;
+		var raycast = GetNode<RayCast2D>("enemyTriggerRayCast");
+		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
+
+		if(soldier.FlipH && raycast.RotationDegrees != 180)
+		{
+			GD.Print("zero degrees");
+				raycast.RotationDegrees = 180;
+		}
+		else if(!soldier.FlipH && raycast.RotationDegrees != 0)
+		{
+				raycast.RotationDegrees = 0;
+				GD.Print("180 degrees");
+		}
+		//GD.Print(raycast.RotationDegrees);
+
+		if(raycast.IsColliding())
+		{
+			enemyDetected = true;
+			GD.Print("collison detected!");
+		}
+		else if(enemyDetected)
+			enemyDetected = false;
 
 		movement(velocity,delta);
 		animations();
@@ -135,10 +161,23 @@ public override void _PhysicsProcess(double delta)
 
 		if(direction != 0)
 			body.Play("walk");
+		else if(current == States.SHOOT)
+			body.Play("shoot");
 		else if(isGathering)
 			body.Play("gather");
 		else
 			body.Play("idle");
+	}
+
+	public void animationFinished()
+	{
+		if(current == States.SHOOT)
+		{
+			animationFinish = true;
+			if(bulletFired == true)
+				bulletFired = false;
+		}
+		
 	}
 
 	public void movement(Vector2 velocity,double delta)
@@ -159,8 +198,11 @@ public override void _PhysicsProcess(double delta)
 			follow();
 		else if(current == States.GATHER)
 			gather();
+		else if(current == States.SHOOT)
+			shoot();
 		else if(current == States.GUARD)
 			guard();
+			
 			
 		
 		if (direction != 0)
@@ -170,6 +212,52 @@ public override void _PhysicsProcess(double delta)
 
 		Velocity = velocity;
 		MoveAndSlide();
+	}
+
+	public void shoot()
+	{
+		direction = 0;
+		
+		if(current != States.SHOOT && enemyDetected)
+		{
+			current = States.SHOOT;
+			GD.Print("enemy detected");
+		}
+		if(current == States.SHOOT && !enemyDetected)
+			current = States.GUARD;
+		
+		bulletspawn();
+
+	}
+
+	public void bulletspawn()
+	{
+		int direction = 0;
+		if (bulletFired == false)
+		{
+			GD.Print("bullet spawned!\n");
+			Marker2D muzzle = GetNode<Marker2D>("bulletspawn");
+			Vector2 muzzlePosition = muzzle.GlobalPosition;
+			var bullet_instance = bullet.Instantiate();
+
+			GD.Print(GetNode<AnimatedSprite2D>("soldierBody").FlipH);
+			if (GetNode<AnimatedSprite2D>("soldierBody").FlipH)
+			{
+				direction = -1;
+				GD.Print(muzzlePosition.X);
+				muzzlePosition.X -= 1.75F * muzzle.Position.X;
+			}
+			else
+			{
+				direction = 1;
+				GD.Print(muzzlePosition.X);
+			}
+			(bullet_instance as Bullet).direction = direction;
+
+			(bullet_instance as Node2D).GlobalPosition = muzzlePosition;
+			GetParent().AddChild(bullet_instance);
+			bulletFired = true;
+		}
 	}
 
 	public void guard()
@@ -183,6 +271,11 @@ public override void _PhysicsProcess(double delta)
 				body.FlipH = false;
 			else if(facing < 0)
 				body.FlipH = true;
+
+			if(enemyDetected)
+				current = States.SHOOT;
+			else if(!enemyDetected && current == States.SHOOT)
+				current = States.GUARD;
 		}
 	}
 
@@ -314,9 +407,6 @@ public override void _PhysicsProcess(double delta)
 							direction = - direction;
 					break;
 				}
-				
-				// // if((tempDistance * direction) + currentPosition  > initialPosition + (100 * direction))
-				// // 	direction = - direction;
 				//GD.Print("global position: " + this.GlobalPosition.X);
 				futurePosition =  currentPosition + (tempDistance * direction) ;
 				//GD.Print("current position: " + currentPosition + " future positon: " + futurePosition + " object position: " + initialPosition);

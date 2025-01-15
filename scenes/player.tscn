@@ -284,10 +284,8 @@ script = ExtResource("1_bs7md")
 position = Vector2(8, -65)
 scale = Vector2(1.25, 1.25)
 sprite_frames = SubResource("SpriteFrames_8j76l")
-animation = &"command"
+animation = &"attack"
 autoplay = "idle"
-frame = 2
-frame_progress = 1.0
 
 [node name="playerHitBox" type="CollisionShape2D" parent="."]
 position = Vector2(4.6875, -16)

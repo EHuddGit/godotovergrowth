@@ -3,13 +3,119 @@ using System;
 
 public partial class Enemy : CharacterBody2D
 {
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+	public const float Speed = 50.0f;
+	public const float JumpVelocity = -400.0f;
+
+	enum States {IDLE,WANDER,FOLLOW,ATTACK,SEEK,};
+	enum WanderStates {IDLE,MOVING};
+	public enum WanderDirections{LEFT,RIGHT,BOTH};
+	States current = States.WANDER;
+	WanderStates wanderCurrent = WanderStates.MOVING;
+	float direction = 0;
+	float futurePosition = 0;
+	bool isWandering = false;
+
+	public override void _PhysicsProcess(double delta)
 	{
+		Vector2 velocity = Velocity;
+
+		// Add the gravity.
+		movement(velocity,delta);
+		animations();
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
+	public void animations()
 	{
+		var body = GetNode<AnimatedSprite2D>("enemyBody");
+		if(direction > 0)
+		{
+			body.FlipH = false;
+		}
+		else if(direction < 0)
+		{
+			body.FlipH = true;
+		}
+
+		if(direction != 0)
+			body.Play("walk");
+		else
+			body.Play("idle");
+	}
+
+	public void movement(Vector2 velocity,double delta)
+	{
+		int[] distances = {25,50,75};
+		int[] directionChoice = {-1,1};
+		int tempDistance = 0;
+		float currentPosition = GetNode<AnimatedSprite2D>("enemyBody").GlobalPosition.X;
+
+		if (!IsOnFloor())
+		{
+			velocity += GetGravity() * (float)delta;
+		}
+		//where states are checked on
+		if(current == States.WANDER)
+			wandering();
+		
+			
+		
+		if (direction != 0)
+			velocity.X = direction * Speed;
+		else
+			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
+
+		Velocity = velocity;
+		MoveAndSlide();
+	}
+
+	public void wandering()
+	{
+		var timer = GetNode<Timer>("wanderTimer");
+		timer.OneShot = true;
+		int[] distances = {25,50,75};
+		int[] directionChoice = {-1,1};
+		int tempDistance = 0;
+		float currentPosition = GetNode<AnimatedSprite2D>("enemyBody").GlobalPosition.X;
+		if(wanderCurrent == WanderStates.IDLE)
+		{ 
+			//GD.Print("i am idle");
+			direction = 0;
+			//GD.Print("time left:" + timer.TimeLeft);
+			if(!isWandering)
+			{
+				timer.Start(GD.Randi() % 2 + 1);
+				isWandering = true;
+				GD.Print("made it to timer start");
+			}
+			else if(timer.IsStopped())
+			{
+				GD.Print("timer stopped");
+				wanderCurrent = WanderStates.MOVING;
+				isWandering = false;
+			}
+		}
+		else if(wanderCurrent == WanderStates.MOVING)
+		{
+			if(!isWandering)
+			{ //this picks a random distance and direction to go to and updates on the future position to head to
+				direction =  directionChoice[GD.Randi() % 2];
+				tempDistance = distances[GD.Randi() % 3];
+
+				futurePosition =  currentPosition + (tempDistance * direction);
+				isWandering = true;	
+			}
+			else
+			{ //this is basically say if you reached your destination go and idle for abit
+				if((direction == -1 && currentPosition <= futurePosition) || 
+				(direction == 1 && currentPosition >= futurePosition ))
+				{	
+					isWandering = false;
+					wanderCurrent = WanderStates.IDLE;
+					
+				}
+			}
+
+			
+		}
 	}
 }
