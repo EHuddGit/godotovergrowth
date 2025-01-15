@@ -362,3 +362,8 @@ position = Vector2(10, -39)
 shape = SubResource("RectangleShape2D_xeeso")
 
 [node name="wanderTimer" type="Timer" parent="."]
+
+[node name="objectDetecter" type="RayCast2D" parent="."]
+position = Vector2(0, -50)
+target_position = Vector2(400, 0)
+collision_mask = 12

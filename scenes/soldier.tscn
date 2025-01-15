@@ -285,7 +285,7 @@ script = ExtResource("1_l0e1u")
 
 [node name="soldierBody" type="AnimatedSprite2D" parent="."]
 material = SubResource("ShaderMaterial_2btlm")
-position = Vector2(6, 0)
+position = Vector2(7, 0)
 scale = Vector2(1.25, 1.25)
 sprite_frames = SubResource("SpriteFrames_ukkis")
 animation = &"shoot"

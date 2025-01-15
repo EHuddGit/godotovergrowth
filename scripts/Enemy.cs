@@ -14,12 +14,17 @@ public partial class Enemy : CharacterBody2D
 	float direction = 0;
 	float futurePosition = 0;
 	bool isWandering = false;
+	bool enemyDetected = false;
 
 	public override void _PhysicsProcess(double delta)
 	{
 		Vector2 velocity = Velocity;
 
-		// Add the gravity.
+		enemyRayCast();
+		if(enemyDetected && (current != States.FOLLOW || current != States.ATTACK))
+			current = States.FOLLOW;
+
+			
 		movement(velocity,delta);
 		animations();
 	}
@@ -38,8 +43,36 @@ public partial class Enemy : CharacterBody2D
 
 		if(direction != 0)
 			body.Play("walk");
+		else if(current == States.ATTACK)
+			body.Play("attack1");
 		else
 			body.Play("idle");
+	}
+
+	public void enemyRayCast()
+	{
+		var raycast = GetNode<RayCast2D>("objectDetecter");
+		var soldier = GetNode<AnimatedSprite2D>("enemyBody");
+
+		if(soldier.FlipH && raycast.RotationDegrees != 180)
+		{
+			GD.Print("zero degrees");
+				raycast.RotationDegrees = 180;
+		}
+		else if(!soldier.FlipH && raycast.RotationDegrees != 0)
+		{
+				raycast.RotationDegrees = 0;
+				GD.Print("180 degrees");
+		}
+		//GD.Print(raycast.RotationDegrees);
+
+		if(raycast.IsColliding())
+		{
+			enemyDetected = true;
+			GD.Print("collison detected!");
+		}
+		else if(enemyDetected)
+			enemyDetected = false;
 	}
 
 	public void movement(Vector2 velocity,double delta)
@@ -56,6 +89,10 @@ public partial class Enemy : CharacterBody2D
 		//where states are checked on
 		if(current == States.WANDER)
 			wandering();
+		else if(current == States.FOLLOW)
+			follow();
+		else if(current == States.ATTACK)
+			attack();
 		
 			
 		
@@ -66,6 +103,37 @@ public partial class Enemy : CharacterBody2D
 
 		Velocity = velocity;
 		MoveAndSlide();
+	}
+
+	public void attack()
+	{
+		direction = 0;
+		var raycast = GetNode<RayCast2D>("objectDetecter");
+		float currentPosition = GetNode<AnimatedSprite2D>("enemyBody").GlobalPosition.X;
+		var vect = raycast.GetCollisionPoint();
+		float difference = currentPosition - vect.X;
+		// if(!raycast.IsColliding())
+		// 	current = States.WANDER;
+		
+		if(difference > 0 && difference > 50)
+			current = States.FOLLOW;
+		else if(difference < 0 && difference < -50)
+			current = States.FOLLOW;
+	}
+
+	public void follow(float attackDistance = 50)
+	{
+		var raycast = GetNode<RayCast2D>("objectDetecter");
+		float currentPosition = GetNode<AnimatedSprite2D>("enemyBody").GlobalPosition.X;
+		var vect = raycast.GetCollisionPoint();
+
+		if( currentPosition < vect.X - attackDistance && currentPosition < vect.X + attackDistance)
+			direction = 2;
+
+		else if(currentPosition > vect.X - attackDistance && currentPosition > vect.X + attackDistance)
+			direction = -2;
+		else
+			current = States.ATTACK;
 	}
 
 	public void wandering()

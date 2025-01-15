@@ -963,7 +963,7 @@ visible = false
 position = Vector2(-261, -34)
 
 [node name="soldier" parent="soldiers" instance=ExtResource("3_snfkc")]
-position = Vector2(997, -17)
+position = Vector2(148, -22)
 
 [node name="player" parent="." instance=ExtResource("1_6thgj")]
 
@@ -977,4 +977,4 @@ offset_right = 566.0
 offset_bottom = -301.0
 
 [node name="Enemy" parent="." instance=ExtResource("8_kxfym")]
-position = Vector2(1452, 63)
+position = Vector2(1264, 64)

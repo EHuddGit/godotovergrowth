@@ -49,6 +49,15 @@ public override void _Ready()
 public override void _PhysicsProcess(double delta)
 	{
 		Vector2 velocity = Velocity;
+
+		enemyRayCast();
+		movement(velocity,delta);
+		animations();
+		
+	}
+
+	public void enemyRayCast()
+	{
 		var raycast = GetNode<RayCast2D>("enemyTriggerRayCast");
 		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
 
@@ -71,10 +80,6 @@ public override void _PhysicsProcess(double delta)
 		}
 		else if(enemyDetected)
 			enemyDetected = false;
-
-		movement(velocity,delta);
-		animations();
-		
 	}
 	
 	//a signal function that is triggered by a player sending a command to a soldier following the player
@@ -221,7 +226,7 @@ public override void _PhysicsProcess(double delta)
 		if(current != States.SHOOT && enemyDetected)
 		{
 			current = States.SHOOT;
-			GD.Print("enemy detected");
+			//GD.Print("enemy detected");
 		}
 		if(current == States.SHOOT && !enemyDetected)
 			current = States.GUARD;
