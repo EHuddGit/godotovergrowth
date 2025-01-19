@@ -53,12 +53,16 @@ animation = &"new_animation"
 autoplay = "new_animation"
 frame_progress = 0.501856
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="hitarea" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitarea"]
 position = Vector2(1, 0.5)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_nhne7")
+debug_color = Color(0.701907, 0.392552, 0.762155, 0.42)
 
-[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
-position = Vector2(0.204022, 0.265887)
-rotation = 1.5708
-scale = Vector2(0.330444, 0.854852)
+[node name="despawnTimer" type="Timer" parent="."]
+
+[connection signal="body_entered" from="hitarea" to="." method="enemyHit"]

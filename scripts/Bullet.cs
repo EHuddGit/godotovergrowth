@@ -14,8 +14,13 @@ public partial class Bullet : Node2D
     {
         
 		bullet = GetNode<AnimatedSprite2D>("bulletBody");
+		var area = GetNode<Area2D>("hitarea");
+		area.BodyEntered += enemyHit;
 		initialPosition = bullet.GlobalPosition.X;
     }
+
+
+
 
     public override void _PhysicsProcess(double delta)
 	{
@@ -28,6 +33,13 @@ public partial class Bullet : Node2D
 			bullet.FlipH = true;
 		}
 		MoveLocalX(direction * speed * (float)delta);
+
 		
+	}
+
+	public void enemyHit(Node2D body)
+	{
+		GD.Print("hit enemy!");
+		this.QueueFree();
 	}
 }
