@@ -346,15 +346,15 @@ size = Vector2(20, 78)
 
 [node name="Enemy" type="CharacterBody2D"]
 position = Vector2(1, 0)
-collision_layer = 3
-collision_mask = 3
+collision_layer = 4
+collision_mask = 24
 script = ExtResource("1_8mqin")
 
 [node name="enemyBody" type="AnimatedSprite2D" parent="."]
 position = Vector2(1, -60)
 scale = Vector2(1.25, 1.25)
 sprite_frames = SubResource("SpriteFrames_nq1sk")
-animation = &"walk"
+animation = &"idle"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -366,4 +366,5 @@ shape = SubResource("RectangleShape2D_xeeso")
 [node name="objectDetecter" type="RayCast2D" parent="."]
 position = Vector2(0, -50)
 target_position = Vector2(400, 0)
-collision_mask = 12
+collision_mask = 11
+collide_with_areas = true

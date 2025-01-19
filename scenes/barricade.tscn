@@ -32,6 +32,7 @@ region_enabled = true
 region_rect = Rect2(872, 16, 48, 48)
 
 [node name="interactionZone" type="Area2D" parent="."]
+collision_layer = 0
 collision_mask = 9
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="interactionZone"]
@@ -40,6 +41,8 @@ shape = SubResource("RectangleShape2D_q20wm")
 debug_color = Color(0.191414, 0.533948, 0.937698, 0.42)
 
 [node name="collisionZone" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 29
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="collisionZone"]
 position = Vector2(-1, -45)

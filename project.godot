@@ -49,6 +49,14 @@ command={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="player"
+2d_physics/layer_2="soldiers"
+2d_physics/layer_3="enemies"
+2d_physics/layer_4="objects"
+2d_physics/layer_5="ground"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0

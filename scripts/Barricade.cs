@@ -26,15 +26,15 @@ public partial class Barricade : Node2D
 	{
 		var  barricade = GetNode<Sprite2D>("barricadeSprite");
 		GD.Print("interaction has been called, proximity is: " + proximity);
-		if(proximity)
+		if(!proximity)
 		{
-			proximity = false;
+			proximity = true;
 			(barricade.Material as ShaderMaterial).SetShaderParameter("onoff", 1);
 			customSignals.EmitSignal(nameof(customSignals.objectNearby),barricade, followerSpots);
 		}
 		else
 		{
-			proximity = true;
+			proximity = false;
 			(barricade.Material as ShaderMaterial).SetShaderParameter("onoff", 0);
 		}
 	}

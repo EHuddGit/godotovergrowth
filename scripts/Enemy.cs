@@ -6,11 +6,17 @@ public partial class Enemy : CharacterBody2D
 	public const float Speed = 50.0f;
 	public const float JumpVelocity = -400.0f;
 
+	public const float BarricadeAttackRange = 30.0f;
+	public const float PlayerAttackRange = 20.0f;
+	public const float SoldierAttackRange = 20.0f;
+
 	enum States {IDLE,WANDER,FOLLOW,ATTACK,SEEK,};
 	enum WanderStates {IDLE,MOVING};
 	public enum WanderDirections{LEFT,RIGHT,BOTH};
+	enum ATTACKTARGETS 	{BARRICADE,SOLDIER,PLAYER};
 	States current = States.WANDER;
 	WanderStates wanderCurrent = WanderStates.MOVING;
+	ATTACKTARGETS attackObjName;
 	float direction = 0;
 	float futurePosition = 0;
 	bool isWandering = false;
@@ -21,7 +27,7 @@ public partial class Enemy : CharacterBody2D
 		Vector2 velocity = Velocity;
 
 		enemyRayCast();
-		if(enemyDetected && (current != States.FOLLOW || current != States.ATTACK))
+		if(enemyDetected && current != States.FOLLOW && current != States.ATTACK)
 			current = States.FOLLOW;
 
 			
@@ -69,7 +75,18 @@ public partial class Enemy : CharacterBody2D
 		if(raycast.IsColliding())
 		{
 			enemyDetected = true;
-	//		GD.Print("collison detected!");
+			GD.Print("collison detected!");
+			var collided = (Node)raycast.GetCollider();
+			GD.Print("collided with: " + collided.GetPath());
+
+			if(collided.GetPath().ToString().Contains("barricade"))
+				attackObjName = ATTACKTARGETS.BARRICADE;
+			else if(collided.GetPath().ToString().Contains("soldier"))
+				attackObjName = ATTACKTARGETS.SOLDIER;
+			else if(collided.GetPath().ToString().Contains("player"))
+				attackObjName = ATTACKTARGETS.PLAYER;
+				
+
 		}
 		else if(enemyDetected)
 			enemyDetected = false;
@@ -112,28 +129,49 @@ public partial class Enemy : CharacterBody2D
 		float currentPosition = GetNode<AnimatedSprite2D>("enemyBody").GlobalPosition.X;
 		var vect = raycast.GetCollisionPoint();
 		float difference = currentPosition - vect.X;
-		// if(!raycast.IsColliding())
-		// 	current = States.WANDER;
-		
+		if(!raycast.IsColliding())
+		{
+			current = States.WANDER;
+			wanderCurrent = WanderStates.IDLE;
+		}
 		if(difference > 0 && difference > 50)
 			current = States.FOLLOW;
 		else if(difference < 0 && difference < -50)
 			current = States.FOLLOW;
 	}
 
-	public void follow(float attackDistance = 50)
+	public void follow(float attackDistance = 40)
 	{
 		var raycast = GetNode<RayCast2D>("objectDetecter");
 		float currentPosition = GetNode<AnimatedSprite2D>("enemyBody").GlobalPosition.X;
-		var vect = raycast.GetCollisionPoint();
+		Vector2 vect = raycast.GetCollisionPoint();
+		float followedirection = vect.X - currentPosition;
 
-		if( currentPosition < vect.X - attackDistance && currentPosition < vect.X + attackDistance)
-			direction = 2;
+		if(currentPosition < 0)
+		{
+			followedirection = - followedirection;
+			//attackDistance = - attackDistance;
+		}
+		GD.Print("followed direction: " + followedirection);
+		//GD.Print("current position: " + currentPosition + "  > target stopping point: " + (vect.X + attackDistance));
 
-		else if(currentPosition > vect.X - attackDistance && currentPosition > vect.X + attackDistance)
+		if(currentPosition <= (vect.X - attackDistance)) // && followedirection > 0)
+		 	direction = 2;
+		else if(currentPosition >= (vect.X + attackDistance))// && followedirection < 0)
 			direction = -2;
 		else
+		{
+			direction = 0;
 			current = States.ATTACK;
+		}
+			
+		// if( currentPosition < vect.X - attackDistance && currentPosition < vect.X + attackDistance)
+		// 	direction = 2;
+
+		// else if(currentPosition > vect.X - attackDistance && currentPosition > vect.X + attackDistance)
+		// 	direction = -2;
+		// else
+		// 	current = States.ATTACK;
 	}
 
 	public void wandering()

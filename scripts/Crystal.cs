@@ -15,15 +15,15 @@ public partial class Crystal : Node2D
 	{
 		var crystal = GetNode<Sprite2D>("crystalSprite");
 		GD.Print("interaction has been called, proximity is: " + proximity);
-		if(proximity)
+		if(!proximity)
 		{
-			proximity = false;
+			proximity = true;
 			(crystal.Material as ShaderMaterial).SetShaderParameter("onoff", 1);
 			customSignals.EmitSignal(nameof(customSignals.objectNearby),crystal, followerSpots);
 		}
 		else
 		{
-			proximity = true;
+			proximity = false;
 			(crystal.Material as ShaderMaterial).SetShaderParameter("onoff", 0);
 		}
 	}

@@ -280,7 +280,7 @@ size = Vector2(300, 90)
 
 [node name="soldier" type="CharacterBody2D"]
 collision_layer = 2
-collision_mask = 2
+collision_mask = 16
 script = ExtResource("1_l0e1u")
 
 [node name="soldierBody" type="AnimatedSprite2D" parent="."]
@@ -297,6 +297,7 @@ shape = SubResource("RectangleShape2D_gcdgv")
 debug_color = Color(0.236608, 0.525512, 0.945134, 0.42)
 
 [node name="commandArea" type="Area2D" parent="."]
+collision_layer = 0
 collision_mask = 9
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="commandArea"]
@@ -310,7 +311,7 @@ debug_color = Color(0.321393, 0.614389, 0.331464, 0.42)
 modulate = Color(0.401802, 0.427756, 0.157414, 1)
 position = Vector2(0, 40)
 target_position = Vector2(200, -1)
-collision_mask = 11
+collision_mask = 13
 
 [node name="bulletspawn" type="Marker2D" parent="."]
 position = Vector2(42.5, 23.3935)
