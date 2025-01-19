@@ -956,11 +956,13 @@ layer_0/tile_data = PackedInt32Array(262143, 1376256, 22, 327679, 1376256, 23, 3
 [node name="Barricade" parent="." instance=ExtResource("7_bmf3n")]
 position = Vector2(835, 67)
 
+[node name="Barricade2" parent="." instance=ExtResource("7_bmf3n")]
+position = Vector2(-256, 63)
+
 [node name="soldiers" type="Node" parent="."]
 
 [node name="soldier2" parent="soldiers" instance=ExtResource("3_snfkc")]
-visible = false
-position = Vector2(-261, -34)
+position = Vector2(-1406, -17)
 
 [node name="soldier" parent="soldiers" instance=ExtResource("3_snfkc")]
 position = Vector2(148, -22)
@@ -977,4 +979,4 @@ offset_right = 566.0
 offset_bottom = -301.0
 
 [node name="Enemy" parent="." instance=ExtResource("8_kxfym")]
-position = Vector2(1264, 64)
+position = Vector2(2095, 62)

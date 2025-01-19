@@ -63,20 +63,20 @@ public override void _PhysicsProcess(double delta)
 
 		if(soldier.FlipH && raycast.RotationDegrees != 180)
 		{
-			GD.Print("zero degrees");
+			//GD.Print("zero degrees");
 				raycast.RotationDegrees = 180;
 		}
 		else if(!soldier.FlipH && raycast.RotationDegrees != 0)
 		{
 				raycast.RotationDegrees = 0;
-				GD.Print("180 degrees");
+			//	GD.Print("180 degrees");
 		}
 		//GD.Print(raycast.RotationDegrees);
 
 		if(raycast.IsColliding())
 		{
 			enemyDetected = true;
-			GD.Print("collison detected!");
+			//GD.Print("collison detected!");
 		}
 		else if(enemyDetected)
 			enemyDetected = false;
@@ -100,8 +100,13 @@ public override void _PhysicsProcess(double delta)
 			{
 				GD.Print("soldier is guarding");
 				current = States.GUARD;
-				initialPosition = Obj.GlobalPosition.X + Offset;
-				offset = Offset;
+
+				if(Obj.GlobalPosition.X > 0)
+					offset = -Offset;
+				else
+					offset = Offset;
+					
+				//initialPosition = Obj.GlobalPosition.X + Offset;
 				GD.Print("command offset: " + Offset);
 				GD.Print("object position:" + Obj.GlobalPosition.X + Offset);
 			}
@@ -272,10 +277,11 @@ public override void _PhysicsProcess(double delta)
 			direction = 0;
 			var body = GetNode<AnimatedSprite2D>("soldierBody");
 			float facing = body.GlobalPosition.X - (obj.GlobalPosition.X + offset);
-			if(facing > 0)
-				body.FlipH = false;
-			else if(facing < 0)
+
+			if(obj.GlobalPosition.X < 0 && facing < 0 && body.FlipH == false)
 				body.FlipH = true;
+			else if(obj.GlobalPosition.X > 0 && facing > 0 && body.FlipH == true)
+				body.FlipH = false;
 
 			if(enemyDetected)
 				current = States.SHOOT;

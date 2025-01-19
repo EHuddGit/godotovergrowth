@@ -306,13 +306,6 @@ position = Vector2(0, 35)
 shape = SubResource("RectangleShape2D_ncx8s")
 debug_color = Color(0.321393, 0.614389, 0.331464, 0.42)
 
-[node name="wanderTimer" type="Timer" parent="."]
-one_shot = true
-
-[node name="GatherTimer" type="Timer" parent="."]
-wait_time = 2.0
-one_shot = true
-
 [node name="enemyTriggerRayCast" type="RayCast2D" parent="."]
 modulate = Color(0.401802, 0.427756, 0.157414, 1)
 position = Vector2(0, 40)
@@ -322,6 +315,13 @@ collision_mask = 11
 [node name="bulletspawn" type="Marker2D" parent="."]
 position = Vector2(42.5, 23.3935)
 scale = Vector2(1.25, 1.25)
+
+[node name="GatherTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="wanderTimer" type="Timer" parent="."]
+one_shot = true
 
 [connection signal="animation_finished" from="soldierBody" to="." method="animationFinished"]
 [connection signal="body_entered" from="commandArea" to="." method="playerEntered"]

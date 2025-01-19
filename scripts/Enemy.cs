@@ -56,20 +56,20 @@ public partial class Enemy : CharacterBody2D
 
 		if(soldier.FlipH && raycast.RotationDegrees != 180)
 		{
-			GD.Print("zero degrees");
+		//	GD.Print("zero degrees");
 				raycast.RotationDegrees = 180;
 		}
 		else if(!soldier.FlipH && raycast.RotationDegrees != 0)
 		{
 				raycast.RotationDegrees = 0;
-				GD.Print("180 degrees");
+		//		GD.Print("180 degrees");
 		}
 		//GD.Print(raycast.RotationDegrees);
 
 		if(raycast.IsColliding())
 		{
 			enemyDetected = true;
-			GD.Print("collison detected!");
+	//		GD.Print("collison detected!");
 		}
 		else if(enemyDetected)
 			enemyDetected = false;
@@ -153,11 +153,11 @@ public partial class Enemy : CharacterBody2D
 			{
 				timer.Start(GD.Randi() % 2 + 1);
 				isWandering = true;
-				GD.Print("made it to timer start");
+	//			GD.Print("made it to timer start");
 			}
 			else if(timer.IsStopped())
 			{
-				GD.Print("timer stopped");
+	//			GD.Print("timer stopped");
 				wanderCurrent = WanderStates.MOVING;
 				isWandering = false;
 			}

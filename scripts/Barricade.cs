@@ -3,7 +3,7 @@ using System;
 
 public partial class Barricade : Node2D
 {
-	private bool proximity = false;
+	private static bool proximity = false;
 
 	private Signals customSignals;
 
@@ -14,6 +14,7 @@ public partial class Barricade : Node2D
 	public override void _Ready()
 	{
 		customSignals = GetNode<Signals>("/root/Signals");
+		proximity = false;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
