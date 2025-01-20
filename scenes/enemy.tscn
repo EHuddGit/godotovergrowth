@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://cc4hhly4bxsu8"]
+[gd_scene load_steps=54 format=3 uid="uid://cc4hhly4bxsu8"]
 
 [ext_resource type="Script" path="res://scripts/Enemy.cs" id="1_8mqin"]
 [ext_resource type="Texture2D" uid="uid://bmjhnxualteic" path="res://assets/Zombie Man/Attack_1.png" id="2_lx2bl"]
@@ -8,6 +8,9 @@
 [ext_resource type="Texture2D" uid="uid://8p8tmmwcqj16" path="res://assets/Zombie Man/Idle.png" id="6_ri2hf"]
 [ext_resource type="Texture2D" uid="uid://qdj3huyac8q3" path="res://assets/Zombie Man/Run.png" id="7_x4odp"]
 [ext_resource type="Texture2D" uid="uid://c814dmc7mbpl3" path="res://assets/Zombie Man/Walk.png" id="8_o2bjq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s0n3v"]
+size = Vector2(31, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ywm64"]
 atlas = ExtResource("2_lx2bl")
@@ -252,9 +255,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_57kgc")
 }],
-"loop": true,
+"loop": false,
 "name": &"dead",
-"speed": 10.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -347,14 +350,23 @@ size = Vector2(20, 78)
 [node name="Enemy" type="CharacterBody2D"]
 position = Vector2(1, 0)
 collision_layer = 4
-collision_mask = 24
+collision_mask = 48
 script = ExtResource("1_8mqin")
+
+[node name="hitBox" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 32
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitBox"]
+position = Vector2(5.5, -39)
+shape = SubResource("RectangleShape2D_s0n3v")
+debug_color = Color(0.368032, 0.504684, 0.923078, 0.42)
 
 [node name="enemyBody" type="AnimatedSprite2D" parent="."]
 position = Vector2(1, -60)
 scale = Vector2(1.25, 1.25)
 sprite_frames = SubResource("SpriteFrames_nq1sk")
-animation = &"idle"
+animation = &"attack1"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -368,3 +380,5 @@ position = Vector2(0, -50)
 target_position = Vector2(400, 0)
 collision_mask = 11
 collide_with_areas = true
+
+[connection signal="body_entered" from="hitBox" to="." method="damaged"]

@@ -9,6 +9,8 @@ public partial class Barricade : Node2D
 
 	public int followerCount = 0;
 
+	public int health = 10;
+
 	public Godot.Collections.Array<bool> followerSpots =  new Godot.Collections.Array<bool>{false,false};
 
 	public override void _Ready()

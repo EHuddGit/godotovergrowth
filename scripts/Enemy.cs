@@ -10,49 +10,83 @@ public partial class Enemy : CharacterBody2D
 	public const float PlayerAttackRange = 20.0f;
 	public const float SoldierAttackRange = 20.0f;
 
-	enum States {IDLE,WANDER,FOLLOW,ATTACK,SEEK,};
-	enum WanderStates {IDLE,MOVING};
-	public enum WanderDirections{LEFT,RIGHT,BOTH};
-	enum ATTACKTARGETS 	{BARRICADE,SOLDIER,PLAYER};
+	enum States { IDLE, WANDER, FOLLOW, ATTACK, SEEK, DYING };
+	enum WanderStates { IDLE, MOVING };
+	public enum WanderDirections { LEFT, RIGHT, BOTH };
+	enum ATTACKTARGETS { BARRICADE, SOLDIER, PLAYER };
 	States current = States.WANDER;
 	WanderStates wanderCurrent = WanderStates.MOVING;
 	ATTACKTARGETS attackObjName;
 	float direction = 0;
 	float futurePosition = 0;
 	bool isWandering = false;
+	private bool isdead = false;
 	bool enemyDetected = false;
+
+	private int health = 3;
 
 	public override void _PhysicsProcess(double delta)
 	{
 		Vector2 velocity = Velocity;
 
 		enemyRayCast();
-		if(enemyDetected && current != States.FOLLOW && current != States.ATTACK)
+		if (enemyDetected && current != States.FOLLOW && current != States.ATTACK && current != States.DYING)
 			current = States.FOLLOW;
 
-			
-		movement(velocity,delta);
+
+		movement(velocity, delta);
 		animations();
+	}
+
+	public override void _Ready()
+	{
+		var collision = GetNode<Area2D>("hitBox");
+		var body = GetNode<AnimatedSprite2D>("enemyBody");
+		collision.AreaEntered += damaged;
+		body.AnimationFinished += dead;
+
+
 	}
 
 	public void animations()
 	{
 		var body = GetNode<AnimatedSprite2D>("enemyBody");
-		if(direction > 0)
+		if (direction > 0)
 		{
 			body.FlipH = false;
 		}
-		else if(direction < 0)
+		else if (direction < 0)
 		{
 			body.FlipH = true;
 		}
 
-		if(direction != 0)
+		if (direction != 0)
 			body.Play("walk");
-		else if(current == States.ATTACK)
+		else if (current == States.ATTACK)
 			body.Play("attack1");
+		else if (current == States.DYING)
+			body.Play("dead");
 		else
 			body.Play("idle");
+	}
+
+	public void damaged(Area2D body)
+	{
+
+		health -= 1;
+		GD.Print("enemy hit! health: " + health);
+		if (health <= 0)
+		{
+			GD.Print("should die now");
+			current = States.DYING;
+		}
+	}
+
+	public void dead()
+	{
+		GD.Print("should be deleted now");
+		//if(current == States.DYING)
+		this.QueueFree();
 	}
 
 	public void enemyRayCast()
@@ -60,42 +94,42 @@ public partial class Enemy : CharacterBody2D
 		var raycast = GetNode<RayCast2D>("objectDetecter");
 		var soldier = GetNode<AnimatedSprite2D>("enemyBody");
 
-		if(soldier.FlipH && raycast.RotationDegrees != 180)
+		if (soldier.FlipH && raycast.RotationDegrees != 180)
 		{
-		//	GD.Print("zero degrees");
-				raycast.RotationDegrees = 180;
+			//	GD.Print("zero degrees");
+			raycast.RotationDegrees = 180;
 		}
-		else if(!soldier.FlipH && raycast.RotationDegrees != 0)
+		else if (!soldier.FlipH && raycast.RotationDegrees != 0)
 		{
-				raycast.RotationDegrees = 0;
-		//		GD.Print("180 degrees");
+			raycast.RotationDegrees = 0;
+			//		GD.Print("180 degrees");
 		}
 		//GD.Print(raycast.RotationDegrees);
 
-		if(raycast.IsColliding())
+		if (raycast.IsColliding())
 		{
 			enemyDetected = true;
-			GD.Print("collison detected!");
+			//GD.Print("collison detected!");
 			var collided = (Node)raycast.GetCollider();
-			GD.Print("collided with: " + collided.GetPath());
+			//GD.Print("collided with: " + collided.GetPath());
 
-			if(collided.GetPath().ToString().Contains("barricade"))
+			if (collided.GetPath().ToString().Contains("barricade"))
 				attackObjName = ATTACKTARGETS.BARRICADE;
-			else if(collided.GetPath().ToString().Contains("soldier"))
+			else if (collided.GetPath().ToString().Contains("soldier"))
 				attackObjName = ATTACKTARGETS.SOLDIER;
-			else if(collided.GetPath().ToString().Contains("player"))
+			else if (collided.GetPath().ToString().Contains("player"))
 				attackObjName = ATTACKTARGETS.PLAYER;
-				
+
 
 		}
-		else if(enemyDetected)
+		else if (enemyDetected)
 			enemyDetected = false;
 	}
 
-	public void movement(Vector2 velocity,double delta)
+	public void movement(Vector2 velocity, double delta)
 	{
-		int[] distances = {25,50,75};
-		int[] directionChoice = {-1,1};
+		int[] distances = { 25, 50, 75 };
+		int[] directionChoice = { -1, 1 };
 		int tempDistance = 0;
 		float currentPosition = GetNode<AnimatedSprite2D>("enemyBody").GlobalPosition.X;
 
@@ -104,15 +138,19 @@ public partial class Enemy : CharacterBody2D
 			velocity += GetGravity() * (float)delta;
 		}
 		//where states are checked on
-		if(current == States.WANDER)
+		if (current == States.DYING)
+			direction = 0;
+		else if (current == States.WANDER)
 			wandering();
-		else if(current == States.FOLLOW)
+		else if (current == States.FOLLOW)
 			follow();
-		else if(current == States.ATTACK)
+		else if (current == States.ATTACK)
 			attack();
-		
-			
-		
+
+
+
+
+
 		if (direction != 0)
 			velocity.X = direction * Speed;
 		else
@@ -129,15 +167,18 @@ public partial class Enemy : CharacterBody2D
 		float currentPosition = GetNode<AnimatedSprite2D>("enemyBody").GlobalPosition.X;
 		var vect = raycast.GetCollisionPoint();
 		float difference = currentPosition - vect.X;
-		if(!raycast.IsColliding())
+		if (current != States.DYING)
 		{
-			current = States.WANDER;
-			wanderCurrent = WanderStates.IDLE;
+			if (!raycast.IsColliding())
+			{
+				current = States.WANDER;
+				wanderCurrent = WanderStates.IDLE;
+			}
+			if (difference > 0 && difference > 50)
+				current = States.FOLLOW;
+			else if (difference < 0 && difference < -50)
+				current = States.FOLLOW;
 		}
-		if(difference > 0 && difference > 50)
-			current = States.FOLLOW;
-		else if(difference < 0 && difference < -50)
-			current = States.FOLLOW;
 	}
 
 	public void follow(float attackDistance = 40)
@@ -147,24 +188,27 @@ public partial class Enemy : CharacterBody2D
 		Vector2 vect = raycast.GetCollisionPoint();
 		float followedirection = vect.X - currentPosition;
 
-		if(currentPosition < 0)
+		if (currentPosition < 0)
 		{
-			followedirection = - followedirection;
+			followedirection = -followedirection;
 			//attackDistance = - attackDistance;
 		}
-		GD.Print("followed direction: " + followedirection);
+		//GD.Print("followed direction: " + followedirection);
 		//GD.Print("current position: " + currentPosition + "  > target stopping point: " + (vect.X + attackDistance));
 
-		if(currentPosition <= (vect.X - attackDistance)) // && followedirection > 0)
-		 	direction = 2;
-		else if(currentPosition >= (vect.X + attackDistance))// && followedirection < 0)
+		if (currentPosition <= (vect.X - attackDistance)) // && followedirection > 0)
+			direction = 2;
+		else if (currentPosition >= (vect.X + attackDistance))// && followedirection < 0)
 			direction = -2;
 		else
 		{
 			direction = 0;
-			current = States.ATTACK;
+			if(current != States.DYING)
+			{
+				current = States.ATTACK;
+			}
 		}
-			
+
 		// if( currentPosition < vect.X - attackDistance && currentPosition < vect.X + attackDistance)
 		// 	direction = 2;
 
@@ -178,50 +222,50 @@ public partial class Enemy : CharacterBody2D
 	{
 		var timer = GetNode<Timer>("wanderTimer");
 		timer.OneShot = true;
-		int[] distances = {25,50,75};
-		int[] directionChoice = {-1,1};
+		int[] distances = { 25, 50, 75 };
+		int[] directionChoice = { -1, 1 };
 		int tempDistance = 0;
 		float currentPosition = GetNode<AnimatedSprite2D>("enemyBody").GlobalPosition.X;
-		if(wanderCurrent == WanderStates.IDLE)
-		{ 
+		if (wanderCurrent == WanderStates.IDLE)
+		{
 			//GD.Print("i am idle");
 			direction = 0;
 			//GD.Print("time left:" + timer.TimeLeft);
-			if(!isWandering)
+			if (!isWandering)
 			{
 				timer.Start(GD.Randi() % 2 + 1);
 				isWandering = true;
-	//			GD.Print("made it to timer start");
+				//			GD.Print("made it to timer start");
 			}
-			else if(timer.IsStopped())
+			else if (timer.IsStopped())
 			{
-	//			GD.Print("timer stopped");
+				//			GD.Print("timer stopped");
 				wanderCurrent = WanderStates.MOVING;
 				isWandering = false;
 			}
 		}
-		else if(wanderCurrent == WanderStates.MOVING)
+		else if (wanderCurrent == WanderStates.MOVING)
 		{
-			if(!isWandering)
+			if (!isWandering)
 			{ //this picks a random distance and direction to go to and updates on the future position to head to
-				direction =  directionChoice[GD.Randi() % 2];
+				direction = directionChoice[GD.Randi() % 2];
 				tempDistance = distances[GD.Randi() % 3];
 
-				futurePosition =  currentPosition + (tempDistance * direction);
-				isWandering = true;	
+				futurePosition = currentPosition + (tempDistance * direction);
+				isWandering = true;
 			}
 			else
 			{ //this is basically say if you reached your destination go and idle for abit
-				if((direction == -1 && currentPosition <= futurePosition) || 
-				(direction == 1 && currentPosition >= futurePosition ))
-				{	
+				if ((direction == -1 && currentPosition <= futurePosition) ||
+				(direction == 1 && currentPosition >= futurePosition))
+				{
 					isWandering = false;
 					wanderCurrent = WanderStates.IDLE;
-					
+
 				}
 			}
 
-			
+
 		}
 	}
 }

@@ -15,7 +15,7 @@ public partial class Bullet : Node2D
         
 		bullet = GetNode<AnimatedSprite2D>("bulletBody");
 		var area = GetNode<Area2D>("hitarea");
-		area.BodyEntered += enemyHit;
+		//area.BodyEntered += enemyHit;
 		initialPosition = bullet.GlobalPosition.X;
     }
 

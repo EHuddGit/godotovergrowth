@@ -288,7 +288,7 @@ material = SubResource("ShaderMaterial_2btlm")
 position = Vector2(7, 0)
 scale = Vector2(1.25, 1.25)
 sprite_frames = SubResource("SpriteFrames_ukkis")
-animation = &"shoot"
+animation = &"walk"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

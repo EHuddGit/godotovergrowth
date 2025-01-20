@@ -12,7 +12,7 @@ public partial class Player : CharacterBody2D
 {
 	[Signal]
 	public delegate void TestSignalEventHandler(int value);
-	public const float Speed = 300.0f;
+	public const float Speed = 150.0f;
 	public const float JumpVelocity = -400.0f;
 	enum States { IDLE, WALKING, SHOOTING, RUNNING, COMMANDING };
 	private PackedScene bullet = ResourceLoader.Load<PackedScene>("res://scenes/bullet.tscn");
@@ -97,6 +97,7 @@ public partial class Player : CharacterBody2D
 			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
 
 		Velocity = velocity;
+		GD.Print("velocity:" + Velocity);
 		MoveAndSlide();
 	}
 
