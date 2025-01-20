@@ -16,12 +16,28 @@ public partial class Barricade : Node2D
 	public override void _Ready()
 	{
 		customSignals = GetNode<Signals>("/root/Signals");
+		customSignals.enemyDamage += damage;
 		proximity = false;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+
+	}
+
+	public void damage(string pathid)
+	{
+		if(pathid ==  GetNode<Area2D>("collisionZone").GetPath())
+		{
+			GD.Print("barricade damaged");
+			health -= 1;
+			if(health == 0)
+			{
+				GD.Print("barricade destroyed");
+				this.QueueFree();
+			}
+		}
 	}
 
 	public void interaction(Node2D body)

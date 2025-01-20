@@ -23,6 +23,8 @@ public partial class Enemy : CharacterBody2D
 	private bool isdead = false;
 	bool enemyDetected = false;
 
+	private Signals customSignals;
+
 	private int health = 3;
 
 	public override void _PhysicsProcess(double delta)
@@ -42,8 +44,10 @@ public partial class Enemy : CharacterBody2D
 	{
 		var collision = GetNode<Area2D>("hitBox");
 		var body = GetNode<AnimatedSprite2D>("enemyBody");
+		customSignals = GetNode<Signals>("/root/Signals");
+
 		collision.AreaEntered += damaged;
-		body.AnimationFinished += dead;
+		body.AnimationFinished += animationFinish;
 
 
 	}
@@ -82,11 +86,21 @@ public partial class Enemy : CharacterBody2D
 		}
 	}
 
-	public void dead()
+	public void animationFinish()
 	{
-		GD.Print("should be deleted now");
-		//if(current == States.DYING)
-		this.QueueFree();
+		
+		if(current == States.DYING)
+		{
+			GD.Print("should be deleted now");
+			this.QueueFree();
+		}
+		else if(current == States.ATTACK)
+		{
+			var raycast = GetNode<RayCast2D>("objectDetecter");
+			var collided = (Node)raycast.GetCollider();
+			GD.Print("collided with" + collided.GetPath().ToString());
+			customSignals.EmitSignal(nameof(customSignals.enemyDamage),collided.GetPath().ToString());
+		}
 	}
 
 	public void enemyRayCast()
