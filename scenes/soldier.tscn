@@ -158,7 +158,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_300mi")
 }],
-"loop": true,
+"loop": false,
 "name": &"dead",
 "speed": 10.0
 }, {
@@ -288,7 +288,7 @@ material = SubResource("ShaderMaterial_2btlm")
 position = Vector2(7, 0)
 scale = Vector2(1.25, 1.25)
 sprite_frames = SubResource("SpriteFrames_ukkis")
-animation = &"walk"
+animation = &"dead"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

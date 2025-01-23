@@ -76,7 +76,6 @@ public partial class Enemy : CharacterBody2D
 
 	public void damaged(Area2D body)
 	{
-
 		health -= 1;
 		GD.Print("enemy hit! health: " + health);
 		if (health <= 0)
@@ -88,18 +87,18 @@ public partial class Enemy : CharacterBody2D
 
 	public void animationFinish()
 	{
-		
-		if(current == States.DYING)
+
+		if (current == States.DYING)
 		{
 			GD.Print("should be deleted now");
 			this.QueueFree();
 		}
-		else if(current == States.ATTACK)
+		else if (current == States.ATTACK)
 		{
 			var raycast = GetNode<RayCast2D>("objectDetecter");
 			var collided = (Node)raycast.GetCollider();
 			GD.Print("collided with" + collided.GetPath().ToString());
-			customSignals.EmitSignal(nameof(customSignals.enemyDamage),collided.GetPath().ToString());
+			customSignals.EmitSignal(nameof(customSignals.enemyDamage), collided.GetPath().ToString());
 		}
 	}
 
@@ -120,23 +119,21 @@ public partial class Enemy : CharacterBody2D
 		}
 		//GD.Print(raycast.RotationDegrees);
 
-		if (raycast.IsColliding())
+		if (raycast.IsColliding() && GodotObject.IsInstanceValid(raycast.GetCollider()))
 		{
 			enemyDetected = true;
 			//GD.Print("collison detected!");
+			
 			var collided = (Node)raycast.GetCollider();
-			//GD.Print("collided with: " + collided.GetPath());
-
+			
 			if (collided.GetPath().ToString().Contains("barricade"))
 				attackObjName = ATTACKTARGETS.BARRICADE;
 			else if (collided.GetPath().ToString().Contains("soldier"))
 				attackObjName = ATTACKTARGETS.SOLDIER;
 			else if (collided.GetPath().ToString().Contains("player"))
 				attackObjName = ATTACKTARGETS.PLAYER;
-
-
 		}
-		else if (enemyDetected)
+		else
 			enemyDetected = false;
 	}
 
@@ -217,7 +214,7 @@ public partial class Enemy : CharacterBody2D
 		else
 		{
 			direction = 0;
-			if(current != States.DYING)
+			if (current != States.DYING)
 			{
 				current = States.ATTACK;
 			}

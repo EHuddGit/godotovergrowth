@@ -973,10 +973,10 @@ position = Vector2(-1406, -17)
 position = Vector2(903, -20)
 
 [node name="player" parent="." instance=ExtResource("1_6thgj")]
-position = Vector2(3, 47)
+position = Vector2(3, 46)
 
 [node name="Camera2D" type="Camera2D" parent="player"]
-position = Vector2(4, -43)
+position = Vector2(0, -269)
 
 [node name="resourceCounter" parent="player/Camera2D" instance=ExtResource("5_b5ecb")]
 offset_left = 468.0
@@ -988,7 +988,7 @@ offset_bottom = -301.0
 position = Vector2(-2134, 59)
 
 [node name="Enemy" parent="." instance=ExtResource("8_kxfym")]
-position = Vector2(1244, 64)
+position = Vector2(786, 63)
 
 [node name="Barricade4" parent="." instance=ExtResource("7_bmf3n")]
-position = Vector2(1053, 62)
+position = Vector2(1354, 68)

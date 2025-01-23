@@ -33,9 +33,13 @@ public partial class Barricade : Node2D
 			GD.Print("barricade damaged");
 			health -= 1;
 			if(health == 0)
-			{
+			{ //originally deleted the barricade but decided it was a bad idea since it can be rebuilt
+				// instead its collisonlayer is getting removed for enemies to pass through
+				GetNode<Area2D>("collisionZone").CollisionLayer = 0;
+				this.Visible = false;
 				GD.Print("barricade destroyed");
-				this.QueueFree();
+				//customSignals.enemyDamage -= damage;
+				//this.QueueFree();
 			}
 		}
 	}

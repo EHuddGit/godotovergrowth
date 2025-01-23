@@ -10,50 +10,52 @@ public partial class Soldier : CharacterBody2D
 	public const float objectRange = 50.0f;
 	private PackedScene bullet = ResourceLoader.Load<PackedScene>("res://scenes/bullet.tscn");
 
-	 enum States {IDLE,WANDER,FOLLOW,SHOOT,GATHER,SEEK,GUARD};
-	 enum WanderStates {IDLE,MOVING};
-	 enum CommandStates{FOLLOW,MINE,GAURD,NONE};
-	public enum WanderDirections{LEFT,RIGHT,BOTH};
+	enum States { IDLE, WANDER, FOLLOW, SHOOT, GATHER, SEEK, GUARD, DYING };
+	enum WanderStates { IDLE, MOVING };
+	enum CommandStates { FOLLOW, MINE, GAURD, NONE };
+	public enum WanderDirections { LEFT, RIGHT, BOTH };
 
-	 static float initialPosition = 0;
-	 float offset = 0;
-	 float futurePosition = 0;
-	 bool following = false;
-	 bool inRange = false;
-	 bool isWandering = false;
-	 bool isGathering = false;
-	 bool enemyDetected = false;
+	static float initialPosition = 0;
+	float offset = 0;
+	float futurePosition = 0;
+	int health = 6;
+	bool following = false;
+	bool inRange = false;
+	bool isWandering = false;
+	bool isGathering = false;
+	bool enemyDetected = false;
 	bool bulletFired = false;
 	bool animationFinish = false;
-	 float direction = 0;
-	 bool registered = false;
-	 bool commanded = false;
+	float direction = 0;
+	bool registered = false;
+	bool commanded = false;
 	States current = States.WANDER;
 	WanderStates wanderCurrent = WanderStates.MOVING;
 	CommandStates commandCurrent = CommandStates.NONE;
 	private Signals customSignals;
 
 	Sprite2D obj;
-	
 
 
-public override void _Ready()
-{
-   customSignals = GetNode<Signals>("/root/Signals");
-   customSignals.playerCommanding += playerCommandFollow;
-   customSignals.playerCommandingObject += playerCommandObject;
-   initialPosition = GetNode<AnimatedSprite2D>("soldierBody").GlobalPosition.X;
-   GD.Print( this.GetPath());
-}
 
-public override void _PhysicsProcess(double delta)
+	public override void _Ready()
+	{
+		customSignals = GetNode<Signals>("/root/Signals");
+		customSignals.playerCommanding += playerCommandFollow;
+		customSignals.playerCommandingObject += playerCommandObject;
+		customSignals.enemyDamage += damaged;
+		initialPosition = GetNode<AnimatedSprite2D>("soldierBody").GlobalPosition.X;
+		GD.Print(this.GetPath());
+	}
+
+	public override void _PhysicsProcess(double delta)
 	{
 		Vector2 velocity = Velocity;
 
 		enemyRayCast();
-		movement(velocity,delta);
+		movement(velocity, delta);
 		animations();
-		
+
 	}
 
 	public void enemyRayCast()
@@ -61,56 +63,56 @@ public override void _PhysicsProcess(double delta)
 		var raycast = GetNode<RayCast2D>("enemyTriggerRayCast");
 		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
 
-		if(soldier.FlipH && raycast.RotationDegrees != 180)
+		if (soldier.FlipH && raycast.RotationDegrees != 180)
 		{
 			//GD.Print("zero degrees");
-				raycast.RotationDegrees = 180;
+			raycast.RotationDegrees = 180;
 		}
-		else if(!soldier.FlipH && raycast.RotationDegrees != 0)
+		else if (!soldier.FlipH && raycast.RotationDegrees != 0)
 		{
-				raycast.RotationDegrees = 0;
+			raycast.RotationDegrees = 0;
 			//	GD.Print("180 degrees");
 		}
 		//GD.Print(raycast.RotationDegrees);
 
-		if(raycast.IsColliding())
+		if (raycast.IsColliding())
 		{
 			enemyDetected = true;
 			//GD.Print("collison detected!");
 		}
-		else if(enemyDetected)
+		else if (enemyDetected)
 			enemyDetected = false;
 	}
-	
+
 	//a signal function that is triggered by a player sending a command to a soldier following the player
 	//depending on the object the soldier will either mine or guard
 	public void playerCommandObject(string pathID, Sprite2D Obj, Signals.COMMANDS command, float Offset)
 	{
 		GD.Print("soldier commanded to an object");
 		GD.Print("soldier state: " + current);
-		if(current == States.FOLLOW && this.GetPath() == pathID)
+		if (current == States.FOLLOW && this.GetPath() == pathID)
 		{
 			obj = Obj;
-			if(command == Signals.COMMANDS.MINING)
+			if (command == Signals.COMMANDS.MINING)
 			{
 				GD.Print("soldier is mining");
 				current = States.GATHER;
 			}
-			else if(command == Signals.COMMANDS.GUARDING)
+			else if (command == Signals.COMMANDS.GUARDING)
 			{
 				GD.Print("soldier is guarding");
 				current = States.GUARD;
 
-				if(Obj.GlobalPosition.X > 0)
+				if (Obj.GlobalPosition.X > 0)
 					offset = -Offset;
 				else
 					offset = Offset;
-					
+
 				//initialPosition = Obj.GlobalPosition.X + Offset;
 				GD.Print("command offset: " + Offset);
 				GD.Print("object position:" + Obj.GlobalPosition.X + Offset);
 			}
-			
+
 		}
 	}
 	public void playerCommandFollow()
@@ -119,15 +121,15 @@ public override void _PhysicsProcess(double delta)
 		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
 		//turns off the wandering or gathering animations
 		isGathering = false;
-		
-		if(inRange)
+
+		if (inRange)
 		{
 			isWandering = false;
-			if(current != States.FOLLOW)
+			if (current != States.FOLLOW)
 			{
 				current = States.FOLLOW;
 				GD.Print("player has commanded soldier to follow");
-				customSignals.EmitSignal(nameof(customSignals.followingPlayer),this.GetPath());
+				customSignals.EmitSignal(nameof(customSignals.followingPlayer), this.GetPath());
 			}
 			else
 			{
@@ -137,14 +139,28 @@ public override void _PhysicsProcess(double delta)
 			}
 			GD.Print("status: " + current);
 		}
-		
+
+	}
+
+	public void damaged(string pathid)
+	{
+		if (pathid == this.GetPath().ToString())
+		{
+			health -= 1;
+			GD.Print("enemy hit! health: " + health);
+			if (health <= 0)
+			{
+				GD.Print("should die now");
+				current = States.DYING;
+			}
+		}
 	}
 
 
 	public void playerEntered(Node2D body)
 	{
 		var material = GetNode<AnimatedSprite2D>("soldierBody").Material;
-		if(inRange)
+		if (inRange)
 		{
 			inRange = false;
 			(material as ShaderMaterial).SetShaderParameter("onoff", 0);
@@ -152,28 +168,30 @@ public override void _PhysicsProcess(double delta)
 		else
 		{
 			inRange = true;
-			if(!following)
-			(material as ShaderMaterial).SetShaderParameter("onoff", 1);
+			if (!following)
+				(material as ShaderMaterial).SetShaderParameter("onoff", 1);
 		}
 	}
-	 
+
 	public void animations()
 	{
 		var body = GetNode<AnimatedSprite2D>("soldierBody");
-		if(direction > 0)
+		if (direction > 0)
 		{
 			body.FlipH = false;
 		}
-		else if(direction < 0)
+		else if (direction < 0)
 		{
 			body.FlipH = true;
 		}
 
-		if(direction != 0)
+		if (current == States.DYING)
+			body.Play("dead");
+		else if (direction != 0)
 			body.Play("walk");
-		else if(current == States.SHOOT)
+		else if (current == States.SHOOT)
 			body.Play("shoot");
-		else if(isGathering)
+		else if (isGathering)
 			body.Play("gather");
 		else
 			body.Play("idle");
@@ -181,19 +199,27 @@ public override void _PhysicsProcess(double delta)
 
 	public void animationFinished()
 	{
-		if(current == States.SHOOT)
+		if (current == States.SHOOT)
 		{
 			animationFinish = true;
-			if(bulletFired == true)
+			if (bulletFired == true)
 				bulletFired = false;
 		}
-		
+		else if (current == States.DYING)
+		{
+			customSignals.playerCommanding -= playerCommandFollow;
+			customSignals.playerCommandingObject -= playerCommandObject;
+			customSignals.enemyDamage -= damaged;
+			this.CollisionLayer = 0;
+			this.QueueFree();
+		}
+
 	}
 
-	public void movement(Vector2 velocity,double delta)
+	public void movement(Vector2 velocity, double delta)
 	{
-		int[] distances = {25,50,75};
-		int[] directionChoice = {-1,1};
+		int[] distances = { 25, 50, 75 };
+		int[] directionChoice = { -1, 1 };
 		int tempDistance = 0;
 		float currentPosition = GetNode<AnimatedSprite2D>("soldierBody").GlobalPosition.X;
 
@@ -202,19 +228,21 @@ public override void _PhysicsProcess(double delta)
 			velocity += GetGravity() * (float)delta;
 		}
 		//where states are checked on
-		if(current == States.WANDER)
+		if (current == States.DYING)
+			direction = 0;
+		else if (current == States.WANDER)
 			wandering();
-		else if(current == States.FOLLOW)
+		else if (current == States.FOLLOW)
 			follow();
-		else if(current == States.GATHER)
+		else if (current == States.GATHER)
 			gather();
-		else if(current == States.SHOOT)
+		else if (current == States.SHOOT)
 			shoot();
-		else if(current == States.GUARD)
+		else if (current == States.GUARD)
 			guard();
-			
-			
-		
+
+
+
 		if (direction != 0)
 			velocity.X = direction * Speed;
 		else
@@ -224,18 +252,19 @@ public override void _PhysicsProcess(double delta)
 		MoveAndSlide();
 	}
 
+
 	public void shoot()
 	{
 		direction = 0;
-		
-		if(current != States.SHOOT && enemyDetected)
+
+		if (current != States.SHOOT && enemyDetected)
 		{
 			current = States.SHOOT;
 			//GD.Print("enemy detected");
 		}
-		if(current == States.SHOOT && !enemyDetected)
+		if (current == States.SHOOT && !enemyDetected)
 			current = States.GUARD;
-		
+
 		bulletspawn();
 
 	}
@@ -278,14 +307,14 @@ public override void _PhysicsProcess(double delta)
 			var body = GetNode<AnimatedSprite2D>("soldierBody");
 			float facing = body.GlobalPosition.X - (obj.GlobalPosition.X + offset);
 
-			if(obj.GlobalPosition.X < 0 && facing < 0 && body.FlipH == false)
+			if (obj.GlobalPosition.X < 0 && facing < 0 && body.FlipH == false)
 				body.FlipH = true;
-			else if(obj.GlobalPosition.X > 0 && facing > 0 && body.FlipH == true)
+			else if (obj.GlobalPosition.X > 0 && facing > 0 && body.FlipH == true)
 				body.FlipH = false;
 
-			if(enemyDetected)
+			if (enemyDetected)
 				current = States.SHOOT;
-			else if(!enemyDetected && current == States.SHOOT)
+			else if (!enemyDetected && current == States.SHOOT)
 				current = States.GUARD;
 		}
 	}
@@ -296,12 +325,12 @@ public override void _PhysicsProcess(double delta)
 		bool withinRange = false;
 		float target = obj.GlobalPosition.X + offset;
 		//GD.Print("offset: " + offset);
-		if( soldier.GlobalPosition.X < target - objRange && soldier.GlobalPosition.X < target + objRange)
+		if (soldier.GlobalPosition.X < target - objRange && soldier.GlobalPosition.X < target + objRange)
 		{
 			direction = 2;
 			withinRange = false;
 		}
-		else if(soldier.GlobalPosition.X > target - objRange && soldier.GlobalPosition.X > target + objRange)
+		else if (soldier.GlobalPosition.X > target - objRange && soldier.GlobalPosition.X > target + objRange)
 		{
 			direction = -2;
 			withinRange = false;
@@ -312,17 +341,17 @@ public override void _PhysicsProcess(double delta)
 		}
 
 		return withinRange;
-			 
+
 	}
 
 	public void gather()
 	{
 		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
 		var timer = GetNode<Timer>("GatherTimer");
-		if(seek())
+		if (seek())
 		{
 			direction = 0;
-			if(!isGathering)
+			if (!isGathering)
 			{
 				isGathering = true;
 				timer.Start(3);
@@ -330,9 +359,9 @@ public override void _PhysicsProcess(double delta)
 			}
 			else
 			{
-				if(timer.IsStopped())
+				if (timer.IsStopped())
 				{
-					customSignals.EmitSignal(nameof(customSignals.resourceMined),obj);
+					customSignals.EmitSignal(nameof(customSignals.resourceMined), obj);
 					timer.Start(3);
 					GD.Print("gathering restarted!");
 				}
@@ -344,54 +373,54 @@ public override void _PhysicsProcess(double delta)
 		//EmitSignal(SignalName.HealthChanged, oldHealth, _health);
 		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
 		//EmitSignal(SignalName.Follower,soldier);
-		
-		if(!inRange)
+
+		if (!inRange)
 		{
-			if(Global.playerInstance.GlobalPosition.X > soldier.GlobalPosition.X)
-			 	direction = 2;
-			 else
-			 	direction = -2;
+			if (Global.playerInstance.GlobalPosition.X > soldier.GlobalPosition.X)
+				direction = 2;
+			else
+				direction = -2;
 		}
 		else
 			direction = 0;
 	}
 
 	//its stuttering when choosing to move twice
-	public void wandering(WanderDirections directions = WanderDirections.BOTH,float distance = WanderDistance)
+	public void wandering(WanderDirections directions = WanderDirections.BOTH, float distance = WanderDistance)
 	{
-		
+
 		var timer = GetNode<Timer>("wanderTimer");
-		int[] distances = {25,50,75};
-		int[] directionChoice = {-1,1};
+		int[] distances = { 25, 50, 75 };
+		int[] directionChoice = { -1, 1 };
 		int tempDistance = 0;
 		float currentPosition = GetNode<AnimatedSprite2D>("soldierBody").GlobalPosition.X;
 		bool withinL = true;
 		bool withinR = true;
-		
 
-		if(wanderCurrent == WanderStates.IDLE)
-		{ 
+
+		if (wanderCurrent == WanderStates.IDLE)
+		{
 			//GD.Print("i am idle");
 			direction = 0;
-			if(!isWandering)
+			if (!isWandering)
 			{
 				timer.Start(GD.Randi() % 2 + 1);
 				isWandering = true;
 			}
-			else if(timer.IsStopped())
+			else if (timer.IsStopped())
 			{
 				//GD.Print("timer stopped");
 				wanderCurrent = WanderStates.MOVING;
 				isWandering = false;
 			}
 		}
-		else if(wanderCurrent == WanderStates.MOVING)
+		else if (wanderCurrent == WanderStates.MOVING)
 		{
 			//GD.Print("i am moving");
-			if(!isWandering)
+			if (!isWandering)
 			{
-					
-				direction =  directionChoice[GD.Randi() % 2];
+
+				direction = directionChoice[GD.Randi() % 2];
 				tempDistance = distances[GD.Randi() % 3];
 				// // checks if the soldier's next move is within allowed range on the left or right
 				// if((tempDistance * direction) + currentPosition > initialPosition + distance)
@@ -399,46 +428,46 @@ public override void _PhysicsProcess(double delta)
 
 				// if((tempDistance * direction) + currentPosition < initialPosition + distance)
 				// 	withinL = false;
-				
-				switch(directions)
+
+				switch (directions)
 				{
 					case WanderDirections.LEFT:
-						if(withinL == false || (tempDistance * direction) + currentPosition < initialPosition)
+						if (withinL == false || (tempDistance * direction) + currentPosition < initialPosition)
 						{
-							direction = - direction;
+							direction = -direction;
 							GD.Print("direction change!");
 						}
-					break;
+						break;
 					case WanderDirections.RIGHT:
-						if(withinR == false || (tempDistance * direction) + currentPosition > initialPosition)
-							direction = - direction;
-					break;
+						if (withinR == false || (tempDistance * direction) + currentPosition > initialPosition)
+							direction = -direction;
+						break;
 					case WanderDirections.BOTH:
-						if(withinR == false || withinL == false)
-							direction = - direction;
-					break;
+						if (withinR == false || withinL == false)
+							direction = -direction;
+						break;
 				}
 				//GD.Print("global position: " + this.GlobalPosition.X);
-				futurePosition =  currentPosition + (tempDistance * direction) ;
+				futurePosition = currentPosition + (tempDistance * direction);
 				//GD.Print("current position: " + currentPosition + " future positon: " + futurePosition + " object position: " + initialPosition);
 				//GD.Print("current position: " + currentPosition +" next position: " + futurePosition);
-				isWandering = true;	
+				isWandering = true;
 
 			}
 			else
 			{
-				if((direction == -1 && currentPosition <= futurePosition) || 
-				(direction == 1 && currentPosition >= futurePosition ))
-				{	
+				if ((direction == -1 && currentPosition <= futurePosition) ||
+				(direction == 1 && currentPosition >= futurePosition))
+				{
 					//GD.Print("going back to idle")
 					isWandering = false;
 					wanderCurrent = WanderStates.IDLE;
-					
-				}	
-				
+
+				}
+
 			}
 		}
-	
+
 	}
-	
+
 }
