@@ -93,7 +93,13 @@ public partial class Soldier : CharacterBody2D
 		if (current == States.FOLLOW && this.GetPath() == pathID)
 		{
 			obj = Obj;
-			if (command == Signals.COMMANDS.MINING)
+			if(command == Signals.COMMANDS.WANDERING)
+			{
+				GD.Print("player has commanded soldier to wander");
+				current = States.WANDER;
+				initialPosition = GetNode<AnimatedSprite2D>("soldierBody").GlobalPosition.X;
+			}
+			else if (command == Signals.COMMANDS.MINING)
 			{
 				GD.Print("soldier is mining");
 				current = States.GATHER;
@@ -131,12 +137,7 @@ public partial class Soldier : CharacterBody2D
 				GD.Print("player has commanded soldier to follow");
 				customSignals.EmitSignal(nameof(customSignals.followingPlayer), this.GetPath());
 			}
-			else
-			{
-				GD.Print("player has commanded soldier to wander");
-				current = States.WANDER;
-				initialPosition = GetNode<AnimatedSprite2D>("soldierBody").GlobalPosition.X;
-			}
+
 			GD.Print("status: " + current);
 		}
 

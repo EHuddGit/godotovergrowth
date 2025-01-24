@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 public partial class Signals : Node
 {
-    public enum COMMANDS {MINING = 1, GUARDING};
+    public enum COMMANDS {MINING = 1, GUARDING, WANDERING};
     [Signal]
     public delegate void playerCommandingEventHandler();
     [Signal]

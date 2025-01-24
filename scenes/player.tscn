@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=3 uid="uid://b03r5xx8dpl3q"]
+[gd_scene load_steps=52 format=3 uid="uid://b03r5xx8dpl3q"]
 
 [ext_resource type="Texture2D" uid="uid://cfqj2c6kv65ck" path="res://assets/Soldier_1/Shot_2.png" id="1_2bdu3"]
 [ext_resource type="Script" path="res://scripts/Player.cs" id="1_bs7md"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://d33ljuf2qypmc" path="res://assets/Soldier_1/Run.png" id="4_d5mit"]
 [ext_resource type="Texture2D" uid="uid://bwc13guoytw5s" path="res://assets/Soldier_1/Attack.png" id="4_dgddi"]
 [ext_resource type="Texture2D" uid="uid://bj2bg5oif7lyk" path="res://assets/Soldier_1/Dead.png" id="5_q5ru5"]
+[ext_resource type="Texture2D" uid="uid://bh5oqi2rr4m7o" path="res://assets/Soldier_1/Recharge.png" id="6_ars50"]
 [ext_resource type="Texture2D" uid="uid://dbtq5as6vscsi" path="res://assets/Soldier_1/Walk.png" id="8_cyfbn"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_38cb3"]
@@ -68,6 +69,18 @@ region = Rect2(256, 0, 128, 128)
 [sub_resource type="AtlasTexture" id="AtlasTexture_pei7a"]
 atlas = ExtResource("5_q5ru5")
 region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f0efm"]
+atlas = ExtResource("6_ars50")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_01pnb"]
+atlas = ExtResource("6_ars50")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o0oep"]
+atlas = ExtResource("6_ars50")
+region = Rect2(1536, 0, 128, 128)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6ej88"]
 atlas = ExtResource("3_t34wu")
@@ -226,6 +239,20 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_f0efm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_01pnb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o0oep")
+}],
+"loop": false,
+"name": &"gather",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_6ej88")
 }, {
 "duration": 1.0,
@@ -317,8 +344,10 @@ script = ExtResource("1_bs7md")
 position = Vector2(3, -80)
 scale = Vector2(1.25, 1.25)
 sprite_frames = SubResource("SpriteFrames_8j76l")
-animation = &"idle"
+animation = &"gather"
 autoplay = "idle"
+frame = 2
+frame_progress = 1.0
 
 [node name="playerHitBox" type="CollisionShape2D" parent="."]
 position = Vector2(1, -39)

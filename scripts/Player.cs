@@ -14,7 +14,7 @@ public partial class Player : CharacterBody2D
 	public delegate void TestSignalEventHandler(int value);
 	public const float Speed = 250.0f;
 	public const float JumpVelocity = -400.0f;
-	enum States { IDLE, WALKING, SHOOTING, RUNNING, COMMANDING };
+	enum States { IDLE, WALKING, SHOOTING, RUNNING, COMMANDING, GATHERING };
 	private PackedScene bullet = ResourceLoader.Load<PackedScene>("res://scenes/bullet.tscn");
 
 	//flags
@@ -56,6 +56,11 @@ public partial class Player : CharacterBody2D
 		else if (current == States.COMMANDING)
 		{
 			GD.Print("commanding flags");
+			finishedCommand = true;
+			signal = false;
+		}
+		else if( current == States.GATHERING)
+		{
 			finishedCommand = true;
 			signal = false;
 		}
@@ -112,15 +117,19 @@ public partial class Player : CharacterBody2D
 
 		else if (Input.IsActionPressed("shoot"))
 			current = States.SHOOTING;
-
+		else if(Input.IsActionJustPressed("gather"))
+		{
+			current = States.GATHERING;
+			playerCommandFollow();
+		}
 		else if (Input.IsActionJustPressed("command"))
 		{
 			current = States.COMMANDING;
-			playerCommand();
+			playerCommandTask();
 		}
 		else
 		{
-			if (current != States.SHOOTING && current != States.COMMANDING)
+			if (current != States.SHOOTING && current != States.COMMANDING && current != States.GATHERING)
 				current = States.IDLE;
 			else if (current == States.SHOOTING && finishedShot == true)
 			{
@@ -128,7 +137,7 @@ public partial class Player : CharacterBody2D
 				finishedShot = false;
 				bulletFired = false;
 			}
-			else if (current == States.COMMANDING && finishedCommand == true)
+			else if ((current == States.COMMANDING || current == States.GATHERING) && finishedCommand == true)
 			{
 				current = States.IDLE;
 				finishedCommand = false;
@@ -136,8 +145,12 @@ public partial class Player : CharacterBody2D
 		}
 
 	}
-
-	public void playerCommand()
+	public void playerCommandFollow()
+	{
+		GD.Print("follow command");
+		customSignals.EmitSignal(nameof(customSignals.playerCommanding));
+	}
+	public void playerCommandTask()
 	{
 		GD.Print("amount of followers: " + followers.Count);
 		Signals.COMMANDS comm = Signals.COMMANDS.GUARDING;
@@ -163,7 +176,6 @@ public partial class Player : CharacterBody2D
 					comm = Signals.COMMANDS.GUARDING;
 				}
 				
-
 				while(objectFollowerSpots[index] != false || index >= objectFollowerSpots.Count)
 				{
 					index++;
@@ -173,15 +185,15 @@ public partial class Player : CharacterBody2D
 				customSignals.EmitSignal(nameof(customSignals.playerCommandingObject),followers[0], nearbyObject,(int)comm, (index + 1) * 75);
 				followers.Remove(followers[0]);
 			}
+			else
+			{
+				comm = Signals.COMMANDS.WANDERING;
+				customSignals.EmitSignal(nameof(customSignals.playerCommandingObject),followers[0],default(Variant),(int)comm,0);
+				followers.Remove(followers[0]);
+			}
+			
 		}
-		else
-		{
-
-			GD.Print("follow/wander command");
-			customSignals.EmitSignal(nameof(customSignals.playerCommanding));
-		}
-
-
+		
 	}
 
 	public void animations(float direction)
@@ -203,6 +215,8 @@ public partial class Player : CharacterBody2D
 			playerSprite.Play("attack");
 		else if (current == States.COMMANDING)
 			playerSprite.Play("command");
+		else if(current == States.GATHERING)
+			playerSprite.Play("gather");
 		else if (current == States.WALKING)
 			playerSprite.Play("walk");
 		else
