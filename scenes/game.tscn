@@ -1,9 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://cfox3cpyg8mwq"]
+[gd_scene load_steps=13 format=3 uid="uid://cfox3cpyg8mwq"]
 
 [ext_resource type="PackedScene" uid="uid://b03r5xx8dpl3q" path="res://scenes/player.tscn" id="1_6thgj"]
 [ext_resource type="PackedScene" uid="uid://djdff6svxh48o" path="res://scenes/crystal.tscn" id="1_k6ued"]
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_vjvhn"]
 [ext_resource type="Texture2D" uid="uid://7k3nsdphqrly" path="res://assets/background/mainlev_build.png" id="2_ci43u"]
+[ext_resource type="Script" path="res://scripts/SceneManager.cs" id="2_ks7ac"]
 [ext_resource type="PackedScene" uid="uid://c7wfkx1lqu85o" path="res://scenes/soldier.tscn" id="3_snfkc"]
 [ext_resource type="PackedScene" uid="uid://boapd4hva4yrk" path="res://scenes/resourceCounter.tscn" id="5_b5ecb"]
 [ext_resource type="PackedScene" uid="uid://dyx6f0ndug2x8" path="res://scenes/barricade.tscn" id="7_bmf3n"]
@@ -937,6 +938,9 @@ sources/0 = SubResource("TileSetAtlasSource_qpcv7")
 
 [node name="game" type="Node2D"]
 script = ExtResource("1_vjvhn")
+
+[node name="SceneManager" type="Node" parent="."]
+script = ExtResource("2_ks7ac")
 
 [node name="EnemySpawner" type="Node" parent="."]
 

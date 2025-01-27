@@ -15,9 +15,18 @@ public partial class Barricade : Node2D
 
 	public override void _Ready()
 	{
+		var manager = GetNode<SceneManager>("/root/game/SceneManager");
 		customSignals = GetNode<Signals>("/root/Signals");
 		customSignals.enemyDamage += damage;
 		proximity = false;
+		//manager.BarricadeLocations.Add(GetNode<Sprite2D>("barricadeSprite").GlobalPosition);
+		
+		manager.test = (int)(GD.Randi() % 5 + 1);
+		GD.Print("test number: " + manager.test);
+		//for(int i = 0; i < manager.BarricadeLocations.Count; i++)
+		//{
+	//		GD.Print("barricade "+ i + " located at" + manager.BarricadeLocations[i].X);
+	//	}
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
