@@ -19,13 +19,12 @@ public partial class Barricade : Node2D
 		customSignals = GetNode<Signals>("/root/Signals");
 		customSignals.enemyDamage += damage;
 		proximity = false;
-		manager.BarricadeLocations.add_barricade(GetNode<Sprite2D>("barricadeSprite").GlobalPosition);
+		//manager.BarricadeLocations.Add(GetNode<Sprite2D>("barricadeSprite").GlobalPosition);
+		manager.addBarricade(GetNode<Sprite2D>("barricadeSprite").GlobalPosition.X);
 		
-		manager.test = (int)(GD.Randi() % 5 + 1);
-		GD.Print("test number: " + manager.test);
-		for(int i = 0; i < manager.BarricadeLocations.Count; i++)
+		for(int i = 0; i < manager.getBarricades().Count; i++)
 		{
-			GD.Print("barricade "+ i + " located at" + manager.BarricadeLocations[i].X);
+			GD.Print("barricade "+ i + " located at" + manager.getBarricades()[i]);
 		}
 	}
 
