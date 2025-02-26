@@ -11,6 +11,9 @@ public partial class Barricade : Node2D
 
 	public int health = 10;
 
+	public int ID = 0;
+
+
 	public Godot.Collections.Array<bool> followerSpots =  new Godot.Collections.Array<bool>{false,false};
 
 	public override void _Ready()
@@ -20,11 +23,12 @@ public partial class Barricade : Node2D
 		customSignals.enemyDamage += damage;
 		proximity = false;
 		//manager.BarricadeLocations.Add(GetNode<Sprite2D>("barricadeSprite").GlobalPosition);
-		manager.addBarricade(GetNode<Sprite2D>("barricadeSprite").GlobalPosition.X);
+		manager.addBarricade(this);
+		ID = manager.getID();
 		
 		for(int i = 0; i < manager.getBarricades().Count; i++)
 		{
-			GD.Print("barricade "+ i + " located at" + manager.getBarricades()[i]);
+			GD.Print("barricade "+ ID + " located at" + manager.getBarricades()[i].GlobalPosition.X);
 		}
 	}
 

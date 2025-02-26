@@ -18,15 +18,15 @@ region = Rect2(0, 0, 1024, 1024)
 size = Vector2(300, 90)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gupcd"]
-size = Vector2(56, 90)
+size = Vector2(90, 170)
 
 [node name="Barricade" type="Node2D"]
 script = ExtResource("1_jnp3u")
 
 [node name="barricadeSprite" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_i5jnn")
-position = Vector2(5.96046e-08, -32)
-scale = Vector2(1.25, 1.25)
+position = Vector2(0, -48)
+scale = Vector2(2, 2)
 texture = SubResource("AtlasTexture_0ul7b")
 region_enabled = true
 region_rect = Rect2(872, 16, 48, 48)
@@ -45,7 +45,7 @@ collision_layer = 8
 collision_mask = 29
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="collisionZone"]
-position = Vector2(-1, -45)
+position = Vector2(-1, -85)
 shape = SubResource("RectangleShape2D_gupcd")
 
 [connection signal="body_entered" from="interactionZone" to="." method="interaction"]

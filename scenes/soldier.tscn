@@ -273,7 +273,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gcdgv"]
-size = Vector2(13, 62)
+size = Vector2(37, 139)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ncx8s"]
 size = Vector2(300, 90)
@@ -285,14 +285,14 @@ script = ExtResource("1_l0e1u")
 
 [node name="soldierBody" type="AnimatedSprite2D" parent="."]
 material = SubResource("ShaderMaterial_2btlm")
-position = Vector2(7, 0)
-scale = Vector2(1.25, 1.25)
+position = Vector2(14, -79)
+scale = Vector2(2.5, 2.5)
 sprite_frames = SubResource("SpriteFrames_ukkis")
 animation = &"idle"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(7, 49)
+position = Vector2(5.5, 11.5)
 shape = SubResource("RectangleShape2D_gcdgv")
 debug_color = Color(0.236608, 0.525512, 0.945134, 0.42)
 

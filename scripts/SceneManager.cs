@@ -9,8 +9,7 @@ public partial class SceneManager : Node
         public float location;
         public bool validBarricade;
     }
-    private List<float> BarricadeLocations = new List<float>();
-    private List <bool> validBarricades = new List<bool>();
+    private List<Barricade> Barricades = new List<Barricade>();
     public int test = 0;
     private int IDs = -1;
 
@@ -19,54 +18,58 @@ public partial class SceneManager : Node
         IDs++;
         return IDs;
     }
+    
 
-    public void addBarricade(float location)
+
+/*****      Barricade functions     ****************************************************/
+    public void addBarricade(Barricade data)
     {
-       
-        BarricadeLocations.Add(location);
-        BarricadeLocations.Sort();
-        validBarricades.Add(true);
+        Barricades.Add(data);
+       // Barricades.Sort();
     }
 
-    public void updateBarricade(float location)
+    public Barricade getBarricade(int id)
     {
-        for(int index = 0; index < BarricadeLocations.Count; index++)
+        for(int index = 0; index < Barricades.Count; index++)
         {
-            if(BarricadeLocations[index] == location)
+            if(id == Barricades[index].ID)
             {
-                validBarricades[index] = ( validBarricades[index] == false) ? true : false;
-                break;
+                return Barricades[index];
             }
         }
+
+        GD.Print("could not find barricade");
+        return default;
     }
-    public float nearestFallbackBarricade(float location)
+    public Barricade nearestFallbackBarricade(float location)
     {
-        float nearest = 0;
-        for(int index = 0; index < BarricadeLocations.Count; index++)
+        Barricade nearest = new Barricade();
+        GD.Print("this should be zero: " + nearest.GlobalPosition.X);
+        for(int index = 0; index < Barricades.Count; index++)
         {
-            if(location > 0 && BarricadeLocations[index] < location && validBarricades[index] == true)
+            if(location > 0 && Barricades[index].GlobalPosition.X < location && Barricades[index].health > 0)
             {
-                if(nearest != 0 && (location - BarricadeLocations[index]) < nearest || nearest == 0)
+                if(nearest.GlobalPosition.X != 0 && (location - Barricades[index].GlobalPosition.X) < nearest.GlobalPosition.X || nearest.GlobalPosition.X == 0)
                 {
-                    nearest = BarricadeLocations[index];
+                    nearest = Barricades[index];
                 }
             }
-            else if(location < 0 && BarricadeLocations[index] > location && validBarricades[index] == true)
+            else if(location < 0 && Barricades[index].GlobalPosition.X > location && Barricades[index].health > 0)
             {
-                if(nearest != 0 && (location - BarricadeLocations[index]) < nearest || nearest == 0)
+                if(nearest.GlobalPosition.X != 0 && (location - Barricades[index].GlobalPosition.X) < nearest.GlobalPosition.X || nearest.GlobalPosition.X == 0)
                 {
-                    nearest = BarricadeLocations[index];
+                    nearest = Barricades[index];
                 }
             }
         }
        
-       if(nearest == 0)
+       if(nearest.GlobalPosition.X == 0)
         GD.Print("couldnt find barricade, going to 0");
        return nearest;
     }
 
-    public List<float> getBarricades()
+    public List<Barricade> getBarricades()
     {
-        return BarricadeLocations;
+        return Barricades;
     }
 }

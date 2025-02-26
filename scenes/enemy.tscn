@@ -349,6 +349,7 @@ size = Vector2(20, 78)
 
 [node name="Enemy" type="CharacterBody2D"]
 position = Vector2(1, 0)
+scale = Vector2(2.25, 2.25)
 collision_layer = 4
 collision_mask = 48
 script = ExtResource("1_8mqin")
@@ -358,25 +359,24 @@ collision_layer = 4
 collision_mask = 32
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hitBox"]
-position = Vector2(5.5, -39)
+position = Vector2(4.44444, -40.4444)
 shape = SubResource("RectangleShape2D_s0n3v")
 debug_color = Color(0.368032, 0.504684, 0.923078, 0.42)
 
 [node name="enemyBody" type="AnimatedSprite2D" parent="."]
-position = Vector2(1, -60)
-scale = Vector2(1.25, 1.25)
+position = Vector2(4.44444, -48)
 sprite_frames = SubResource("SpriteFrames_nq1sk")
 animation = &"idle"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(10, -39)
+position = Vector2(10.2222, -39.1111)
 shape = SubResource("RectangleShape2D_xeeso")
 
 [node name="wanderTimer" type="Timer" parent="."]
 
 [node name="objectDetecter" type="RayCast2D" parent="."]
-position = Vector2(0, -50)
+position = Vector2(0, -35)
 target_position = Vector2(400, 0)
 collision_mask = 11
 collide_with_areas = true
