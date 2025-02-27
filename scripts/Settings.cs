@@ -38,9 +38,9 @@ public partial class Settings : Control
 
 	public void Back()
 	{
-		GetTree().ChangeSceneToPacked(menu);
 		var scene_instance = menu.Instantiate();
-		GetParent().AddChild(scene_instance);
+		var targetNode = GetParent();
+		targetNode.AddChild(scene_instance);
 		this.QueueFree();
 	}
 
@@ -98,6 +98,8 @@ public partial class Settings : Control
 				updateActionList(remappingButton, @event);
 
 				isRemapping = false;
+				actionToRemap = default;
+				remappingButton = default;
 			}
 		}
 

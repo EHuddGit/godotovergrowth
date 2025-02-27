@@ -17,21 +17,18 @@ public partial class Menu : Control
 
 	public void SettingsPage()
 	{
-		GetTree().ChangeSceneToPacked(settingsPage);
-		var scene_instance = nextScene.Instantiate();
-		GetParent().AddChild(scene_instance);
+		var scene_instance = settingsPage.Instantiate();
+		var targetNode = GetParent();
+		targetNode.AddChild(scene_instance);
 		this.QueueFree();
 
 	}
 	public void StartGame()
 	{
-        GetTree().ChangeSceneToPacked(nextScene);
-		GD.Print(this.GetPath().ToString());
 		var scene_instance = nextScene.Instantiate();
-		GD.Print(GetParent().GetPath().ToString());
-		var targetNode = GetNode<Node2D>("SceneManager");
+		var targetNode = GetParent();
 		targetNode.AddChild(scene_instance);
-		//this.QueueFree();
+		this.QueueFree();
 
 	}
 

@@ -51,6 +51,7 @@ public partial class Barricade : Node2D
 				GetNode<Area2D>("collisionZone").CollisionLayer = 0;
 				this.Visible = false;
 				GD.Print("barricade destroyed");
+				//customSignals.
 				//customSignals.enemyDamage -= damage;
 				//this.QueueFree();
 			}

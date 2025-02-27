@@ -3,7 +3,7 @@ using System;
 
 public partial class Enemy : CharacterBody2D
 {
-	public const float Speed = 50.0f;
+	public const float Speed = 25.0f;
 	public const float JumpVelocity = -400.0f;
 
 	public const float BarricadeAttackRange = 30.0f;

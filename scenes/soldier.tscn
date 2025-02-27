@@ -288,7 +288,7 @@ material = SubResource("ShaderMaterial_2btlm")
 position = Vector2(14, -79)
 scale = Vector2(2.5, 2.5)
 sprite_frames = SubResource("SpriteFrames_ukkis")
-animation = &"idle"
+animation = &"shoot"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -314,7 +314,7 @@ target_position = Vector2(200, -1)
 collision_mask = 13
 
 [node name="bulletspawn" type="Marker2D" parent="."]
-position = Vector2(42.5, 23.3935)
+position = Vector2(95, -33)
 scale = Vector2(1.25, 1.25)
 
 [node name="GatherTimer" type="Timer" parent="."]
