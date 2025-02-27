@@ -4,6 +4,12 @@ using System.Collections.Generic;
 
 public partial class SceneManager : Node
 {
+
+    public override void _Ready()
+	{
+        
+	}
+
     struct barricadeData
     {
         public float location;

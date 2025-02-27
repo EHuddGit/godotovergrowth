@@ -11,4 +11,4 @@ script = ExtResource("1_vjvhn")
 [node name="SceneManager" type="Node" parent="."]
 script = ExtResource("2_ks7ac")
 
-[node name="Control" parent="SceneManager" instance=ExtResource("3_ceyme")]
+[node name="Menu" parent="SceneManager" instance=ExtResource("3_ceyme")]

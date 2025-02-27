@@ -18,6 +18,7 @@ public partial class Barricade : Node2D
 
 	public override void _Ready()
 	{
+		GD.Print(this.GetPath().ToString());
 		var manager = GetNode<SceneManager>("/root/game/SceneManager");
 		customSignals = GetNode<Signals>("/root/Signals");
 		customSignals.enemyDamage += damage;
