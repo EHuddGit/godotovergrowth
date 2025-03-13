@@ -81,6 +81,7 @@ public partial class Enemy : CharacterBody2D
 		if (health <= 0)
 		{
 			GD.Print("should die now");
+			customSignals.EmitSignal(nameof(customSignals.scoreModify),5,true);
 			current = States.DYING;
 		}
 	}

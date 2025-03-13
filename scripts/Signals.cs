@@ -20,6 +20,8 @@ public partial class Signals : Node
     public delegate void soldierMiningEventHandler(AnimatedSprite2D soldier);
     [Signal]
     public delegate void resourceModifyEventHandler(int amount,bool isAdd);
+    [Signal]
+    public delegate void scoreModifyEventHandler(int amount,bool isAdd);
 
     [Signal]
     public delegate void enemyDamageEventHandler(string pathID);
