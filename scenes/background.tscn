@@ -1,0 +1,34 @@
+[gd_scene load_steps=3 format=3 uid="uid://c5efd7jysrs3u"]
+
+[ext_resource type="Texture2D" uid="uid://bu4m4ymvo22p1" path="res://assets/backgrounds_new/bkg-sky.png" id="1_inoye"]
+[ext_resource type="Texture2D" uid="uid://cre1sdd28mhbh" path="res://assets/backgrounds_new/bkg-mountains1.png" id="2_jkuhi"]
+
+[node name="background" type="Node2D"]
+
+[node name="Parallax2D" type="Parallax2D" parent="."]
+scale = Vector2(2, 2)
+scroll_scale = Vector2(0.1, 0.1)
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="Parallax2D"]
+scale = Vector2(2, 2)
+transform = Transform2D(2, 0, 0, 2, 0, 0)
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="Parallax2D/ParallaxBackground"]
+motion_scale = Vector2(0.1, 0.1)
+motion_mirroring = Vector2(595, 0)
+
+[node name="TextureRect3" type="TextureRect" parent="Parallax2D/ParallaxBackground/ParallaxLayer"]
+offset_right = 1190.0
+offset_bottom = 360.0
+texture = ExtResource("1_inoye")
+
+[node name="TextureRect" type="TextureRect" parent="Parallax2D/ParallaxBackground/ParallaxLayer"]
+clip_contents = true
+offset_right = 640.0
+offset_bottom = 360.0
+texture = ExtResource("2_jkuhi")
+stretch_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="Parallax2D/ParallaxBackground/ParallaxLayer"]
+offset_right = 40.0
+offset_bottom = 40.0

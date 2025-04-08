@@ -4,13 +4,25 @@ using System;
 public partial class Crystal : Node2D
 {
 	// Called when the node enters the scene tree for the first time.
-	private bool proximity = false;
+	private bool proximity = true;
 	private bool beingMined = false;
 	private Signals customSignals;
 	public Godot.Collections.Array<bool> followerSpots =  new Godot.Collections.Array<bool>{false,false};
 	private int resources = 100;
 	private int currentFrame = 0;
 	private Rect2[] spriteRects = {new Rect2(0f,0f,128f,128f), new Rect2(128f,0f,128f,128f),new Rect2(256f,0f,128f,128f),new Rect2(384f,0f,128f,128f),new Rect2(512f,0f,128f,128f)};
+
+	public override void _Ready()
+	{
+		GetNode<Sprite2D>("crystalSprite").RegionEnabled = true;
+		GetNode<Sprite2D>("crystalSprite").RegionRect = spriteRects[0];
+		var interactZone = GetNode<Area2D>("interactionZone");
+
+		customSignals = GetNode<Signals>("/root/Signals");
+		customSignals.resourceMined += resourceMining;
+		interactZone.BodyEntered += interaction;
+		interactZone.BodyExited += interaction;
+	}
 	public void interaction(Node2D body)
 	{
 		var crystal = GetNode<Sprite2D>("crystalSprite");
@@ -40,14 +52,7 @@ public partial class Crystal : Node2D
 			customSignals.EmitSignal(nameof(customSignals.resourceModify),5,true);
 		}
 	}
-	public override void _Ready()
-	{
-		GetNode<Sprite2D>("crystalSprite").RegionEnabled = true;
-		GetNode<Sprite2D>("crystalSprite").RegionRect = spriteRects[0];
-
-		customSignals = GetNode<Signals>("/root/Signals");
-		customSignals.resourceMined += resourceMining;
-	}
+	
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)

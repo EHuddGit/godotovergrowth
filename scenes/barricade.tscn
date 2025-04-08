@@ -1,18 +1,18 @@
 [gd_scene load_steps=8 format=3 uid="uid://dyx6f0ndug2x8"]
 
-[ext_resource type="Texture2D" uid="uid://dua3ud4badaog" path="res://assets/props/village-props/TX Village Props.png" id="1_i7qfl"]
 [ext_resource type="Script" path="res://scripts/Barricade.cs" id="1_jnp3u"]
-[ext_resource type="Shader" path="res://assets/crystal.gdshader" id="2_r611y"]
+[ext_resource type="Shader" path="res://scenes/crystal.gdshader" id="2_5w0v8"]
+[ext_resource type="Texture2D" uid="uid://1puh4ttejnxj" path="res://assets/props/barricade spritesheet.png" id="3_na8x5"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_i5jnn"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gg170"]
 resource_local_to_scene = true
-shader = ExtResource("2_r611y")
+shader = ExtResource("2_5w0v8")
 shader_parameter/outline_color = Color(1, 1, 1, 1)
 shader_parameter/onoff = 0
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_0ul7b"]
-atlas = ExtResource("1_i7qfl")
-region = Rect2(0, 0, 1024, 1024)
+[sub_resource type="AtlasTexture" id="AtlasTexture_gqu1r"]
+atlas = ExtResource("3_na8x5")
+region = Rect2(1050, 0, 150, 0)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q20wm"]
 size = Vector2(300, 90)
@@ -24,12 +24,9 @@ size = Vector2(90, 170)
 script = ExtResource("1_jnp3u")
 
 [node name="barricadeSprite" type="Sprite2D" parent="."]
-material = SubResource("ShaderMaterial_i5jnn")
-position = Vector2(0, -48)
-scale = Vector2(2, 2)
-texture = SubResource("AtlasTexture_0ul7b")
-region_enabled = true
-region_rect = Rect2(872, 16, 48, 48)
+material = SubResource("ShaderMaterial_gg170")
+position = Vector2(0, -42)
+texture = SubResource("AtlasTexture_gqu1r")
 
 [node name="interactionZone" type="Area2D" parent="."]
 collision_layer = 0

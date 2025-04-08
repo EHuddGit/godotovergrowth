@@ -589,7 +589,7 @@ frame = 4
 offset = Vector2(37, 0)
 
 [node name="playerHitBox" type="CollisionShape2D" parent="."]
-position = Vector2(0.5, -92.125)
+position = Vector2(29, -85)
 scale = Vector2(1.25, 1.25)
 shape = SubResource("RectangleShape2D_vp8ga")
 

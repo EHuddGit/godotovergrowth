@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://cc4hhly4bxsu8" path="res://scenes/enemy.tscn" id="7_uk2su"]
 [ext_resource type="PackedScene" uid="uid://cgxca1i1ca3kf" path="res://scenes/scoreCounter.tscn" id="9_ysc8e"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_61qsv"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4suqo"]
 texture = ExtResource("2_wftoo")
 6:1/0 = 0
 20:1/0 = 0
@@ -925,7 +925,7 @@ texture = ExtResource("2_wftoo")
 [sub_resource type="TileSet" id="TileSet_xvox0"]
 physics_layer_0/collision_layer = 16
 physics_layer_0/collision_mask = 3
-sources/0 = SubResource("TileSetAtlasSource_61qsv")
+sources/0 = SubResource("TileSetAtlasSource_4suqo")
 
 [node name="level" type="Node2D"]
 
@@ -1001,7 +1001,8 @@ position = Vector2(118, -20)
 [node name="Player" type="Node" parent="."]
 
 [node name="Parallax" parent="Player" instance=ExtResource("6_jmcye")]
-position = Vector2(-17, 15)
+visible = false
+position = Vector2(-116, 10)
 
 [node name="player" parent="Player/Parallax" instance=ExtResource("5_q7mqy")]
 position = Vector2(3, 49)

@@ -1,0 +1,19 @@
+minimum requirements to finish:
+- switch out all the resource sprites
+    - make sprite adjustments to the resources to change between states visually
+- a wave system
+    - have a timer ontop that changes red or green to signify a wave
+    - spawns in enemies during a wave
+    - change enemy behavior to move towards the middle of the map
+- fix the soldier's system of locking on player and extend range
+- implement building barricades
+    - adding an upgrade pop up
+    - change phases of upgraded barricades
+- implement player health
+- fix bullet spawn timing
+- FIX CLUMPING
+
+where i want to finish:
+- change and polish soldier sprites with adjustments
+- add hit visual changes
+- have soldiers move between player y and resource y when needed

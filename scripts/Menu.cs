@@ -4,7 +4,7 @@ using System;
 public partial class Menu : Control
 {
 	// Called when the node enters the scene tree for the first time.
-	private PackedScene nextScene = (PackedScene)ResourceLoader.Load("res://scenes/testLevel.tscn");
+	private PackedScene nextScene = (PackedScene)ResourceLoader.Load("res://scenes/testLevel2.tscn");
 	private PackedScene settingsPage = (PackedScene)ResourceLoader.Load("res://scenes/settings.tscn");
 	private PackedScene scorePage = (PackedScene)ResourceLoader.Load("res://scenes/scoreBoard.tscn");
 	public override void _Ready()

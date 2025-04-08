@@ -8,6 +8,8 @@ public partial class Soldier : CharacterBody2D
 
 	public const float WanderDistance = 100.0f;
 	public const float objectRange = 50.0f;
+	public const float playerY = 586.0f;
+	public const float resourceY = 546.0f;
 	private PackedScene bullet = ResourceLoader.Load<PackedScene>("res://scenes/bullet.tscn");
 
 	enum States { IDLE, WANDER, FOLLOW, SHOOT, GATHER, SEEK, GUARD, DYING };
@@ -26,7 +28,9 @@ public partial class Soldier : CharacterBody2D
 	bool enemyDetected = false;
 	bool bulletFired = false;
 	bool animationFinish = false;
-	float direction = 0;
+	float xdirection = 0;
+	float ydirection = 0;
+	bool ychange = false;
 	bool registered = false;
 	bool commanded = false;
 	States current = States.WANDER;
@@ -177,18 +181,18 @@ public partial class Soldier : CharacterBody2D
 	public void animations()
 	{
 		var body = GetNode<AnimatedSprite2D>("soldierBody");
-		if (direction > 0)
+		if (xdirection > 0)
 		{
 			body.FlipH = false;
 		}
-		else if (direction < 0)
+		else if (xdirection < 0)
 		{
 			body.FlipH = true;
 		}
 
 		if (current == States.DYING)
 			body.Play("dead");
-		else if (direction != 0)
+		else if (xdirection != 0)
 			body.Play("walk");
 		else if (current == States.SHOOT)
 			body.Play("shoot");
@@ -224,13 +228,13 @@ public partial class Soldier : CharacterBody2D
 		int tempDistance = 0;
 		float currentPosition = GetNode<AnimatedSprite2D>("soldierBody").GlobalPosition.X;
 
-		if (!IsOnFloor())
-		{
-			velocity += GetGravity() * (float)delta;
-		}
+		// if (!IsOnFloor())
+		// {
+		// 	velocity += GetGravity() * (float)delta;
+		// }
 		//where states are checked on
 		if (current == States.DYING)
-			direction = 0;
+			xdirection = 0;
 		else if (current == States.WANDER)
 			wandering();
 		else if (current == States.FOLLOW)
@@ -244,8 +248,8 @@ public partial class Soldier : CharacterBody2D
 
 
 
-		if (direction != 0)
-			velocity.X = direction * Speed;
+		if (xdirection != 0)
+			velocity.X = xdirection * Speed;
 		else
 			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
 
@@ -256,7 +260,7 @@ public partial class Soldier : CharacterBody2D
 
 	public void shoot()
 	{
-		direction = 0;
+		xdirection = 0;
 
 		if (current != States.SHOOT && enemyDetected)
 		{
@@ -304,7 +308,7 @@ public partial class Soldier : CharacterBody2D
 	{
 		if (seek(10))
 		{
-			direction = 0;
+			xdirection = 0;
 			var body = GetNode<AnimatedSprite2D>("soldierBody");
 			float facing = body.GlobalPosition.X - (obj.GlobalPosition.X + offset);
 
@@ -326,14 +330,18 @@ public partial class Soldier : CharacterBody2D
 		bool withinRange = false;
 		float target = obj.GlobalPosition.X + offset;
 		//GD.Print("offset: " + offset);
+		if(soldier.GlobalPosition.Y < target - objRange && soldier.GlobalPosition.Y < target + objRange)
+		{
+			ydirection = 1;
+		}
 		if (soldier.GlobalPosition.X < target - objRange && soldier.GlobalPosition.X < target + objRange)
 		{
-			direction = 2;
+			xdirection = 2;
 			withinRange = false;
 		}
 		else if (soldier.GlobalPosition.X > target - objRange && soldier.GlobalPosition.X > target + objRange)
 		{
-			direction = -2;
+			xdirection = -2;
 			withinRange = false;
 		}
 		else
@@ -351,7 +359,7 @@ public partial class Soldier : CharacterBody2D
 		var timer = GetNode<Timer>("GatherTimer");
 		if (seek())
 		{
-			direction = 0;
+			xdirection = 0;
 			if (!isGathering)
 			{
 				isGathering = true;
@@ -378,12 +386,12 @@ public partial class Soldier : CharacterBody2D
 		if (!inRange)
 		{
 			if (Global.playerInstance.GlobalPosition.X > soldier.GlobalPosition.X)
-				direction = 2;
+				xdirection = 2;
 			else
-				direction = -2;
+				xdirection = -2;
 		}
 		else
-			direction = 0;
+			xdirection = 0;
 	}
 
 	//its stuttering when choosing to move twice
@@ -402,7 +410,7 @@ public partial class Soldier : CharacterBody2D
 		if (wanderCurrent == WanderStates.IDLE)
 		{
 			//GD.Print("i am idle");
-			direction = 0;
+			xdirection = 0;
 			if (!isWandering)
 			{
 				timer.Start(GD.Randi() % 2 + 1);
@@ -421,7 +429,7 @@ public partial class Soldier : CharacterBody2D
 			if (!isWandering)
 			{
 
-				direction = directionChoice[GD.Randi() % 2];
+				xdirection = directionChoice[GD.Randi() % 2];
 				tempDistance = distances[GD.Randi() % 3];
 				// // checks if the soldier's next move is within allowed range on the left or right
 				// if((tempDistance * direction) + currentPosition > initialPosition + distance)
@@ -433,23 +441,23 @@ public partial class Soldier : CharacterBody2D
 				switch (directions)
 				{
 					case WanderDirections.LEFT:
-						if (withinL == false || (tempDistance * direction) + currentPosition < initialPosition)
+						if (withinL == false || (tempDistance * xdirection) + currentPosition < initialPosition)
 						{
-							direction = -direction;
+							xdirection = -xdirection;
 							GD.Print("direction change!");
 						}
 						break;
 					case WanderDirections.RIGHT:
-						if (withinR == false || (tempDistance * direction) + currentPosition > initialPosition)
-							direction = -direction;
+						if (withinR == false || (tempDistance * xdirection) + currentPosition > initialPosition)
+							xdirection = -xdirection;
 						break;
 					case WanderDirections.BOTH:
 						if (withinR == false || withinL == false)
-							direction = -direction;
+							xdirection = -xdirection;
 						break;
 				}
 				//GD.Print("global position: " + this.GlobalPosition.X);
-				futurePosition = currentPosition + (tempDistance * direction);
+				futurePosition = currentPosition + (tempDistance * xdirection);
 				//GD.Print("current position: " + currentPosition + " future positon: " + futurePosition + " object position: " + initialPosition);
 				//GD.Print("current position: " + currentPosition +" next position: " + futurePosition);
 				isWandering = true;
@@ -457,8 +465,8 @@ public partial class Soldier : CharacterBody2D
 			}
 			else
 			{
-				if ((direction == -1 && currentPosition <= futurePosition) ||
-				(direction == 1 && currentPosition >= futurePosition))
+				if ((xdirection == -1 && currentPosition <= futurePosition) ||
+				(xdirection == 1 && currentPosition >= futurePosition))
 				{
 					//GD.Print("going back to idle")
 					isWandering = false;

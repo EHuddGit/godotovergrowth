@@ -84,10 +84,10 @@ public partial class Player : CharacterBody2D
 		float direction = Input.GetAxis("left", "right");
 
 		// Add the gravity.
-		if (!IsOnFloor())
-		{
-			velocity += GetGravity() * (float)delta;
-		}
+		// if (!IsOnFloor())
+		// {
+		// 	velocity += GetGravity() * (float)delta;
+		// }
 
 		stateChange(direction);
 		animations(direction);
