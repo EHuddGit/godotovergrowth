@@ -1,6 +1,6 @@
 minimum requirements to finish:
-- switch out all the resource sprites
-    - make sprite adjustments to the resources to change between states visually
+- switch out all the resource sprites ✓
+- make sprite adjustments to the resources to change between states visually
 - a wave system
     - have a timer ontop that changes red or green to signify a wave
     - spawns in enemies during a wave
@@ -9,9 +9,15 @@ minimum requirements to finish:
 - implement building barricades
     - adding an upgrade pop up
     - change phases of upgraded barricades
+    - probably requires popup with resource costs and its own button to build it
 - implement player health
 - fix bullet spawn timing
 - FIX CLUMPING
+    - boid algorithm?
+    - maybe give them a very small raycast that checks if another enemy is infront of infront of it 
+    - or give a small variance on where to arrive to attack
+    - have them attack at slightly different times
+- make sure bullets only hit one enemy
 
 where i want to finish:
 - change and polish soldier sprites with adjustments

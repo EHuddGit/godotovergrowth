@@ -145,10 +145,10 @@ public partial class Enemy : CharacterBody2D
 		int tempDistance = 0;
 		float currentPosition = GetNode<AnimatedSprite2D>("enemyBody").GlobalPosition.X;
 
-		if (!IsOnFloor())
-		{
-			velocity += GetGravity() * (float)delta;
-		}
+		// if (!IsOnFloor())
+		// {
+		// 	velocity += GetGravity() * (float)delta;
+		// }
 		//where states are checked on
 		if (current == States.DYING)
 			direction = 0;

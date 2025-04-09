@@ -573,7 +573,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vp8ga"]
-size = Vector2(32.8, 147)
+size = Vector2(35.6, 146.3)
 
 [node name="player" type="CharacterBody2D"]
 collision_mask = 24
@@ -581,15 +581,14 @@ script = ExtResource("1_bs7md")
 
 [node name="playerBody" type="AnimatedSprite2D" parent="."]
 position = Vector2(11, -87)
-scale = Vector2(1.5, 1.5)
+scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_8j76l")
-animation = &"attack"
+animation = &"walk"
 autoplay = "idle"
-frame = 4
 offset = Vector2(37, 0)
 
 [node name="playerHitBox" type="CollisionShape2D" parent="."]
-position = Vector2(29, -85)
+position = Vector2(70.75, -86.4375)
 scale = Vector2(1.25, 1.25)
 shape = SubResource("RectangleShape2D_vp8ga")
 
