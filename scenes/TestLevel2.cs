@@ -5,7 +5,7 @@ public partial class TestLevel2 : Node2D
 { // add wave timers, update the ui timer node, spawn enemy at points specified
 	// Called when the node enters the scene tree for the first time.
 	private Timer waves;
-	private const int waveTimeLength = 5;
+	private const int waveTimeLength = 55;
 	private int countDown = waveTimeLength;
 	private PackedScene enemy = ResourceLoader.Load<PackedScene>("res://scenes/enemy.tscn");
 	

@@ -1,11 +1,10 @@
-[gd_scene load_steps=86 format=3 uid="uid://b03r5xx8dpl3q"]
+[gd_scene load_steps=89 format=3 uid="uid://b03r5xx8dpl3q"]
 
 [ext_resource type="Script" path="res://scripts/Player.cs" id="1_bs7md"]
 [ext_resource type="Texture2D" uid="uid://d6lllfkgm1lj" path="res://assets/player/squad leader shoot.png" id="2_ak4t1"]
 [ext_resource type="Texture2D" uid="uid://d33ljuf2qypmc" path="res://assets/Soldier_1/Run.png" id="4_d5mit"]
 [ext_resource type="Texture2D" uid="uid://bidawjilr75sh" path="res://assets/player/squad leader hand signal.png" id="4_ths8v"]
 [ext_resource type="Texture2D" uid="uid://byoav71a0lpkn" path="res://assets/player/squad leader death.png" id="5_03ajh"]
-[ext_resource type="Texture2D" uid="uid://bh5oqi2rr4m7o" path="res://assets/Soldier_1/Recharge.png" id="6_ars50"]
 [ext_resource type="Texture2D" uid="uid://b4j7qpl7tip5r" path="res://assets/player/squad leader idle.png" id="7_3k7w5"]
 [ext_resource type="Texture2D" uid="uid://ix4dkb6w7l12" path="res://assets/player/squad leader walk.png" id="9_spouw"]
 
@@ -153,17 +152,33 @@ region = Rect2(1800, 0, 150, 150)
 atlas = ExtResource("5_03ajh")
 region = Rect2(1950, 0, 150, 150)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_f0efm"]
-atlas = ExtResource("6_ars50")
-region = Rect2(0, 0, 128, 128)
+[sub_resource type="AtlasTexture" id="AtlasTexture_oh34n"]
+atlas = ExtResource("4_ths8v")
+region = Rect2(0, 0, 150, 150)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_01pnb"]
-atlas = ExtResource("6_ars50")
-region = Rect2(128, 0, 128, 128)
+[sub_resource type="AtlasTexture" id="AtlasTexture_re5c5"]
+atlas = ExtResource("4_ths8v")
+region = Rect2(150, 0, 150, 150)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_o0oep"]
-atlas = ExtResource("6_ars50")
-region = Rect2(1536, 0, 128, 128)
+[sub_resource type="AtlasTexture" id="AtlasTexture_eytjl"]
+atlas = ExtResource("4_ths8v")
+region = Rect2(300, 0, 150, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j76uk"]
+atlas = ExtResource("4_ths8v")
+region = Rect2(1650, 0, 150, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0expr"]
+atlas = ExtResource("4_ths8v")
+region = Rect2(1500, 0, 150, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5f3cp"]
+atlas = ExtResource("4_ths8v")
+region = Rect2(300, 0, 150, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7af1n"]
+atlas = ExtResource("4_ths8v")
+region = Rect2(150, 0, 150, 150)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pm5dx"]
 atlas = ExtResource("7_3k7w5")
@@ -436,13 +451,25 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_f0efm")
+"texture": SubResource("AtlasTexture_oh34n")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_01pnb")
+"texture": SubResource("AtlasTexture_re5c5")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_o0oep")
+"texture": SubResource("AtlasTexture_eytjl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j76uk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0expr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5f3cp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7af1n")
 }],
 "loop": false,
 "name": &"gather",
@@ -583,16 +610,25 @@ script = ExtResource("1_bs7md")
 position = Vector2(11, -87)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_8j76l")
-animation = &"walk"
+animation = &"attack"
 autoplay = "idle"
+frame = 4
 offset = Vector2(37, 0)
+flip_h = true
 
 [node name="playerHitBox" type="CollisionShape2D" parent="."]
 position = Vector2(70.75, -86.4375)
 scale = Vector2(1.25, 1.25)
 shape = SubResource("RectangleShape2D_vp8ga")
 
-[node name="muzzle" type="Marker2D" parent="."]
-position = Vector2(170, -139)
+[node name="muzzleRight" type="Marker2D" parent="."]
+position = Vector2(186, -157)
+
+[node name="bulletspawnTimer" type="Timer" parent="."]
+wait_time = 0.34
+one_shot = true
+
+[node name="muzzleLeft" type="Marker2D" parent="."]
+position = Vector2(-16, -156)
 
 [connection signal="animation_finished" from="playerBody" to="." method="animationFinish"]

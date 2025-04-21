@@ -20,6 +20,7 @@ public partial class Player : CharacterBody2D
 	//flags
 	private States current = States.IDLE;
 	private bool finishedShot = false;
+	private bool finished = true;
 	private bool finishedCommand = false;
 	private bool bulletFired = false;
 	private bool signal = false;
@@ -50,6 +51,7 @@ public partial class Player : CharacterBody2D
 		{
 			GD.Print("shooting flags");
 			finishedShot = true;
+			finished = true;
 			if (bulletFired == true)
 				bulletFired = false;
 		}
@@ -69,10 +71,12 @@ public partial class Player : CharacterBody2D
 	//---------------------------loop functions----------------------------------------------
 	public override void _Ready()
 	{
+		var timer = GetNode<Timer>("bulletspawnTimer");
 		Global.playerInstance = GetNode<AnimatedSprite2D>("playerBody");
 		customSignals = GetNode<Signals>("/root/Signals");
 		customSignals.followingPlayer += soldierFollowing;
 		customSignals.objectNearby += objectClose;
+		timer.Timeout += bulletspawn;
 		followers = new List<string>();
 
 	}
@@ -82,6 +86,7 @@ public partial class Player : CharacterBody2D
 		//Engine.TimeScale = 0.25;
 		Vector2 velocity = Velocity;
 		float direction = Input.GetAxis("left", "right");
+		
 
 		// Add the gravity.
 		// if (!IsOnFloor())
@@ -93,7 +98,7 @@ public partial class Player : CharacterBody2D
 		animations(direction);
 		if (current == States.SHOOTING)
 		{
-			bulletspawn();
+			//bulletspawn();
 			EmitSignal(nameof(TestSignal), 10);
 		}
 		if (direction != 0)
@@ -198,8 +203,8 @@ public partial class Player : CharacterBody2D
 
 	public void animations(float direction)
 	{
+		var timer = GetNode<Timer>("bulletspawnTimer");
 		AnimatedSprite2D playerSprite = GetNode<AnimatedSprite2D>("playerBody");
-		Marker2D muzzle = GetNode<Marker2D>("muzzle");
 		// flips the sprite based on which direction the player is moving
 		if (direction > 0)
 		{
@@ -212,7 +217,17 @@ public partial class Player : CharacterBody2D
 
 		//playing which animation based on the state
 		if (current == States.SHOOTING)
+		{
 			playerSprite.Play("attack");
+			if( finished == true)
+			{
+				timer.Start(0.34F);
+				GD.Print("time start");
+				finished = false;
+			}
+				
+			
+		}
 		else if (current == States.COMMANDING)
 			playerSprite.Play("command");
 		else if(current == States.GATHERING)
@@ -227,31 +242,35 @@ public partial class Player : CharacterBody2D
 	public void bulletspawn()
 	{
 		int direction = 0;
-		if (bulletFired == false)
-		{
+		//if (bulletFired == false)
+		//{
 			GD.Print("bullet spawned!\n");
-			Marker2D muzzle = GetNode<Marker2D>("muzzle");
-			Vector2 muzzlePosition = muzzle.GlobalPosition;
+			Marker2D muzzleR = GetNode<Marker2D>("muzzleRight");
+			Marker2D muzzleL = GetNode<Marker2D>("muzzleLeft");
+			Vector2 muzzlePosition;
 			var bullet_instance = bullet.Instantiate();
 
 			GD.Print(GetNode<AnimatedSprite2D>("playerBody").FlipH);
 			if (GetNode<AnimatedSprite2D>("playerBody").FlipH)
 			{
 				direction = -1;
-				GD.Print(muzzlePosition.X);
-				muzzlePosition.X -= 1.75F * muzzle.Position.X;
+				//GD.Print(muzzlePosition.X);
+				muzzlePosition = muzzleL.GlobalPosition;
 			}
 			else
 			{
 				direction = 1;
-				GD.Print(muzzlePosition.X);
+				muzzlePosition = muzzleR.GlobalPosition;
+				//GD.Print(muzzlePosition.X);
 			}
 			(bullet_instance as Bullet).direction = direction;
 
 			(bullet_instance as Node2D).GlobalPosition = muzzlePosition;
 			GetParent().AddChild(bullet_instance);
 			bulletFired = true;
-		}
+
+			GD.Print("bullet spawned");
+		//}
 	}
 
 

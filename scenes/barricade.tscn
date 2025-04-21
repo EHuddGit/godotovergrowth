@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dyx6f0ndug2x8"]
+[gd_scene load_steps=9 format=3 uid="uid://dyx6f0ndug2x8"]
 
 [ext_resource type="Script" path="res://scripts/Barricade.cs" id="1_jnp3u"]
 [ext_resource type="Shader" path="res://scenes/crystal.gdshader" id="2_5w0v8"]
@@ -12,13 +12,25 @@ shader_parameter/onoff = 0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gqu1r"]
 atlas = ExtResource("3_na8x5")
-region = Rect2(1050, 0, 150, 0)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q20wm"]
 size = Vector2(300, 90)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gupcd"]
 size = Vector2(90, 170)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d0cfs"]
+bg_color = Color(0.332881, 0.332881, 0.332881, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 3
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [node name="Barricade" type="Node2D"]
 script = ExtResource("1_jnp3u")
@@ -27,8 +39,11 @@ script = ExtResource("1_jnp3u")
 material = SubResource("ShaderMaterial_gg170")
 position = Vector2(0, -42)
 texture = SubResource("AtlasTexture_gqu1r")
+region_enabled = true
+region_rect = Rect2(750, 0, 150, 150)
 
 [node name="interactionZone" type="Area2D" parent="."]
+visible = false
 collision_layer = 0
 collision_mask = 9
 
@@ -38,12 +53,58 @@ shape = SubResource("RectangleShape2D_q20wm")
 debug_color = Color(0.191414, 0.533948, 0.937698, 0.42)
 
 [node name="collisionZone" type="Area2D" parent="."]
+visible = false
 collision_layer = 8
 collision_mask = 29
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="collisionZone"]
 position = Vector2(-1, -85)
 shape = SubResource("RectangleShape2D_gupcd")
+
+[node name="popup" type="Panel" parent="."]
+offset_left = -54.0
+offset_top = -220.0
+offset_right = 56.0
+offset_bottom = -145.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_d0cfs")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="popup"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 9.0
+offset_top = 5.0
+offset_right = 799.0
+offset_bottom = 557.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.1, 0.1)
+
+[node name="level" type="Label" parent="popup/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "Barricade level : 0"
+horizontal_alignment = 1
+
+[node name="upgrade" type="Label" parent="popup/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "Upgrade : 15 scrap"
+horizontal_alignment = 1
+
+[node name="health" type="Label" parent="popup/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "health: 0"
+horizontal_alignment = 1
+
+[node name="E" type="Label" parent="popup/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 125
+text = "E"
+horizontal_alignment = 1
+vertical_alignment = 2
 
 [connection signal="body_entered" from="interactionZone" to="." method="interaction"]
 [connection signal="body_exited" from="interactionZone" to="." method="interaction"]

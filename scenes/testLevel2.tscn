@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4 uid="uid://owcsyjo8sj2y"]
+[gd_scene load_steps=19 format=4 uid="uid://owcsyjo8sj2y"]
 
 [ext_resource type="PackedScene" uid="uid://c5efd7jysrs3u" path="res://scenes/background.tscn" id="1_1l53y"]
 [ext_resource type="Texture2D" uid="uid://du2aib4p0nbvn" path="res://assets/backgrounds_new/bkg-town.png" id="1_7ffub"]
@@ -9,8 +9,9 @@
 [ext_resource type="Texture2D" uid="uid://qq321jfrbyl3" path="res://assets/backgrounds_new/foreground.png" id="6_7wpj6"]
 [ext_resource type="PackedScene" uid="uid://dyx6f0ndug2x8" path="res://scenes/barricade.tscn" id="10_4eni8"]
 [ext_resource type="PackedScene" uid="uid://88yukc1vttg3" path="res://scenes/levelUI.tscn" id="11_6jkam"]
-[ext_resource type="PackedScene" uid="uid://c7wfkx1lqu85o" path="res://scenes/soldier.tscn" id="11_8qkyi"]
+[ext_resource type="PackedScene" uid="uid://dmad4x5i8ypua" path="res://scenes/soldier.tscn" id="11_8qkyi"]
 [ext_resource type="PackedScene" uid="uid://djdff6svxh48o" path="res://scenes/crystal.tscn" id="11_78a77"]
+[ext_resource type="Texture2D" uid="uid://b7ena204bfdq2" path="res://assets/props/tent.png" id="12_rmvtp"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_328dv"]
 texture = ExtResource("1_7ffub")
@@ -816,7 +817,7 @@ scale = Vector2(2, 2)
 texture = ExtResource("5_4q6mx")
 
 [node name="Barricade" parent="backgroundObjects" instance=ExtResource("10_4eni8")]
-position = Vector2(1167, 666)
+position = Vector2(1572, 663)
 scale = Vector2(2, 2)
 
 [node name="Crystal" parent="backgroundObjects" instance=ExtResource("11_78a77")]
@@ -863,4 +864,9 @@ position = Vector2(662, 691)
 shape = SubResource("WorldBoundaryShape2D_4mex4")
 
 [node name="enemySpawnR" type="Marker2D" parent="."]
-position = Vector2(1518, 635)
+position = Vector2(1777, 610)
+
+[node name="Tent" type="Sprite2D" parent="."]
+position = Vector2(1094, 435)
+scale = Vector2(2, 2)
+texture = ExtResource("12_rmvtp")

@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://88yukc1vttg3"]
+[gd_scene load_steps=2 format=3 uid="uid://88yukc1vttg3"]
+
+[ext_resource type="Script" path="res://scripts/LevelUi.cs" id="1_ygkgw"]
 
 [node name="levelUI" type="Control"]
 layout_mode = 3
@@ -6,6 +8,7 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 grow_horizontal = 2
+script = ExtResource("1_ygkgw")
 
 [node name="scrap" type="Label" parent="."]
 layout_mode = 1
