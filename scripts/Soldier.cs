@@ -1,11 +1,11 @@
 using Godot;
 using System;
+using System.Threading;
 
 public partial class Soldier : CharacterBody2D
 {
 	public const float Speed = 50.0f;
 	public const float JumpVelocity = -400.0f;
-
 	public const float WanderDistance = 100.0f;
 	public const float objectRange = 50.0f;
 	public const float playerY = 586.0f;
@@ -49,6 +49,8 @@ public partial class Soldier : CharacterBody2D
 		customSignals.playerCommandingObject += playerCommandObject;
 		customSignals.enemyDamage += damaged;
 		initialPosition = GetNode<AnimatedSprite2D>("soldierBody").GlobalPosition.X;
+		var bulletTimer = GetNode<Godot.Timer>("shootTimer");
+		bulletTimer.Timeout += bulletspawn;
 		GD.Print(this.GetPath());
 	}
 
@@ -165,18 +167,37 @@ public partial class Soldier : CharacterBody2D
 	public void playerEntered(Node2D body)
 	{
 		var material = GetNode<AnimatedSprite2D>("soldierBody").Material;
+		var area = GetNode<Area2D>("commandArea");
+		GD.Print("this entered or exited: " + body.GetPath().ToString());
+		var bodies = area.GetOverlappingBodies();
+		bool change = false;
+		foreach (var bodyin in bodies)
+		{
+			if(bodyin == body)
+			{
+				change = true;
+				GD.Print("player near soldier");
+			}
+		}
+
+		if(change)
+			inRange = true;
+		else
+			inRange = false;
+
 		if (inRange)
 		{
-			inRange = false;
-			(material as ShaderMaterial).SetShaderParameter("onoff", 0);
+			//inRange = false;
+			(material as ShaderMaterial).SetShaderParameter("onoff", 1);
 		}
 		else
 		{
-			inRange = true;
-			if (!following)
-				(material as ShaderMaterial).SetShaderParameter("onoff", 1);
+			//inRange = true;
+			//if (!following)
+				(material as ShaderMaterial).SetShaderParameter("onoff", 0);
 		}
 	}
+
 
 	public void animations()
 	{
@@ -191,15 +212,61 @@ public partial class Soldier : CharacterBody2D
 		}
 
 		if (current == States.DYING)
+		{
 			body.Play("dead");
+
+			if(!body.FlipH)
+				body.Offset = new Vector2(56,0);
+			else
+				body.Offset = new Vector2(-71,0);
+		}
 		else if (xdirection != 0)
+		{
 			body.Play("walk");
+
+			if(!body.FlipH)
+				body.Offset = new Vector2(-8,0);
+			else
+				body.Offset = new Vector2(-6,0);
+
+		}
 		else if (current == States.SHOOT)
+		{
 			body.Play("shoot");
+			var bulletTimer = GetNode<Godot.Timer>("shootTimer");
+			if(!bulletFired)
+			{
+				bulletTimer.Start(0.4F);
+				bulletFired = true;
+			}
+			GD.Print("time left: " + bulletTimer.TimeLeft);
+
+			if(!body.FlipH)
+				body.Offset = new Vector2(10,0);
+			else
+				body.Offset = new Vector2(-25,0);
+
+		}
 		else if (isGathering)
+		{
 			body.Play("gather");
+
+			if(!body.FlipH)
+				body.Offset = new Vector2(-1,0);
+			else
+				body.Offset = new Vector2(-14,0);
+
+		}
 		else
+		{
 			body.Play("idle");
+
+			
+			if(!body.FlipH)
+				body.Offset = new Vector2(-13,0);
+			else
+				body.Offset = new Vector2(-2,0);
+		}
 	}
 
 	public void animationFinished()
@@ -270,38 +337,39 @@ public partial class Soldier : CharacterBody2D
 		if (current == States.SHOOT && !enemyDetected)
 			current = States.GUARD;
 
-		bulletspawn();
+		//bulletspawn();
 
 	}
 
 	public void bulletspawn()
 	{
+		GD.Print("bullet spawned");
 		int direction = 0;
-		if (bulletFired == false)
-		{
+		//if (bulletFired == false)
+		//{
 			GD.Print("bullet spawned!\n");
-			Marker2D muzzle = GetNode<Marker2D>("bulletspawn");
-			Vector2 muzzlePosition = muzzle.GlobalPosition;
+			Marker2D muzzleR = GetNode<Marker2D>("bulletspawnR");
+			Marker2D muzzleL = GetNode<Marker2D>("bulletspawnL");
+			Vector2 muzzlePosition;
 			var bullet_instance = bullet.Instantiate();
 
 			GD.Print(GetNode<AnimatedSprite2D>("soldierBody").FlipH);
 			if (GetNode<AnimatedSprite2D>("soldierBody").FlipH)
 			{
 				direction = -1;
-				GD.Print(muzzlePosition.X);
-				muzzlePosition.X -= 1.75F * muzzle.Position.X;
+				muzzlePosition = muzzleL.GlobalPosition;
 			}
 			else
 			{
 				direction = 1;
-				GD.Print(muzzlePosition.X);
+				muzzlePosition = muzzleR.GlobalPosition;
 			}
 			(bullet_instance as Bullet).direction = direction;
 
 			(bullet_instance as Node2D).GlobalPosition = muzzlePosition;
 			GetParent().AddChild(bullet_instance);
-			bulletFired = true;
-		}
+			//bulletFired = true;
+		//}
 	}
 
 	public void guard()
@@ -356,7 +424,7 @@ public partial class Soldier : CharacterBody2D
 	public void gather()
 	{
 		var soldier = GetNode<AnimatedSprite2D>("soldierBody");
-		var timer = GetNode<Timer>("GatherTimer");
+		var timer = GetNode<Godot.Timer>("GatherTimer");
 		if (seek())
 		{
 			xdirection = 0;
@@ -398,7 +466,7 @@ public partial class Soldier : CharacterBody2D
 	public void wandering(WanderDirections directions = WanderDirections.BOTH, float distance = WanderDistance)
 	{
 
-		var timer = GetNode<Timer>("wanderTimer");
+		var timer = GetNode<Godot.Timer>("wanderTimer");
 		int[] distances = { 25, 50, 75 };
 		int[] directionChoice = { -1, 1 };
 		int tempDistance = 0;

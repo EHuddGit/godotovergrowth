@@ -4,7 +4,7 @@ using System;
 public partial class Crystal : Node2D
 {
 	// Called when the node enters the scene tree for the first time.
-	private bool proximity = true;
+	private bool proximity = false;
 	private bool beingMined = false;
 	private Signals customSignals;
 	public Godot.Collections.Array<bool> followerSpots =  new Godot.Collections.Array<bool>{false,false};
@@ -26,17 +26,35 @@ public partial class Crystal : Node2D
 	public void interaction(Node2D body)
 	{
 		var crystal = GetNode<Sprite2D>("crystalSprite");
-		GD.Print("interaction has been called, proximity is: " + proximity);
+		GD.Print("at garbage: this entered or exited: " + body.GetPath().ToString());
+		//GD.Print("interaction has been called, proximity is: " + proximity);
+
+		var area = GetNode<Area2D>("interactionZone");
+		GD.Print("this entered or exited: " + body.GetPath().ToString());
+		var bodies = area.GetOverlappingBodies();
+		bool change = false;
+		foreach (var bodyin in bodies)
+		{
+			if(bodyin == body)
+			{
+				change = true;
+				GD.Print("player near soldier");
+			}
+		}
+
+		if(change)
+			proximity = true;
+		else
+			proximity = false;
+
 		if(!proximity)
 		{
-			proximity = true;
-			(crystal.Material as ShaderMaterial).SetShaderParameter("onoff", 1);
-			customSignals.EmitSignal(nameof(customSignals.objectNearby),crystal, followerSpots);
+			(crystal.Material as ShaderMaterial).SetShaderParameter("onoff", 0);
 		}
 		else
 		{
-			proximity = false;
-			(crystal.Material as ShaderMaterial).SetShaderParameter("onoff", 0);
+			(crystal.Material as ShaderMaterial).SetShaderParameter("onoff", 1);
+			customSignals.EmitSignal(nameof(customSignals.objectNearby),crystal, followerSpots);
 		}
 	}
 

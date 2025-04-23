@@ -1,0 +1,77 @@
+[gd_scene load_steps=5 format=3 uid="uid://dmn86vwwjpgxk"]
+
+[ext_resource type="Texture2D" uid="uid://dapwduhuophed" path="res://assets/props/tent.png" id="1_nnmy5"]
+[ext_resource type="Script" path="res://scripts/Command.cs" id="1_uwalb"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i0lvl"]
+size = Vector2(277, 177)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o47c0"]
+bg_color = Color(0.332881, 0.332881, 0.332881, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 3
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="command" type="Node2D"]
+script = ExtResource("1_uwalb")
+
+[node name="commandSprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_nnmy5")
+
+[node name="spawnZone" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="spawnZone"]
+position = Vector2(4.5, -2.5)
+shape = SubResource("RectangleShape2D_i0lvl")
+
+[node name="popup" type="Panel" parent="."]
+offset_left = -54.0
+offset_top = -108.0
+offset_right = 56.0
+offset_bottom = -33.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_o47c0")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="popup"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 9.0
+offset_top = 5.0
+offset_right = 799.0
+offset_bottom = 557.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.1, 0.1)
+
+[node name="header" type="Label" parent="popup/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "Soldier cost:"
+horizontal_alignment = 1
+
+[node name="upgrade" type="Label" parent="popup/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "15 scrap"
+horizontal_alignment = 1
+
+[node name="E" type="Label" parent="popup/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 125
+text = "
+E"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="soldierSpawnLocal" type="Marker2D" parent="."]
+position = Vector2(0, 105)

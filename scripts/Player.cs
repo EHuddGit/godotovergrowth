@@ -155,7 +155,7 @@ public partial class Player : CharacterBody2D
 		GD.Print("follow command");
 		customSignals.EmitSignal(nameof(customSignals.playerCommanding));
 	}
-	public void playerCommandTask()
+	public void playerCommandTask() //known issue that if two objects are in the same command space, soldier will wander instead
 	{
 		GD.Print("amount of followers: " + followers.Count);
 		Signals.COMMANDS comm = Signals.COMMANDS.GUARDING;
@@ -201,41 +201,81 @@ public partial class Player : CharacterBody2D
 		
 	}
 
+	private enum offsetSprites {SHOOTING = 1,COMMANDING = 2,GATHERING = 2,WALKING = 3,IDLE = 3};
 	public void animations(float direction)
 	{
+		
 		var timer = GetNode<Timer>("bulletspawnTimer");
 		AnimatedSprite2D playerSprite = GetNode<AnimatedSprite2D>("playerBody");
+		Vector2[] offsets = {new Vector2(-4,-7), new Vector2(2,-13),new Vector2(3,-14)};
+		int left = 0;
+		
 		// flips the sprite based on which direction the player is moving
 		if (direction > 0)
 		{
 			playerSprite.FlipH = false;
+			left = 0;
 		}
 		else if (direction < 0)
 		{
 			playerSprite.FlipH = true;
+			left = 1;
 		}
 
 		//playing which animation based on the state
 		if (current == States.SHOOTING)
 		{
 			playerSprite.Play("attack");
+
+			//playerSprite.Offset = new Vector2(offsets[(int)offsetSprites.SHOOTING][left],0);
+			if(!playerSprite.FlipH)
+				playerSprite.Offset = new Vector2(-4,0);
+			else
+				playerSprite.Offset = new Vector2(-7,0);
+
 			if( finished == true)
 			{
 				timer.Start(0.34F);
 				GD.Print("time start");
 				finished = false;
 			}
-				
-			
+					
 		}
 		else if (current == States.COMMANDING)
+		{
 			playerSprite.Play("command");
+
+			if(!playerSprite.FlipH)
+				playerSprite.Offset = new Vector2(2,0);
+			else
+				playerSprite.Offset = new Vector2(-13,0);
+		}
 		else if(current == States.GATHERING)
+		{
 			playerSprite.Play("gather");
+			if(!playerSprite.FlipH)
+				playerSprite.Offset = new Vector2(2,0);
+			else
+				playerSprite.Offset = new Vector2(-13,0);
+		}
 		else if (current == States.WALKING)
+		{
 			playerSprite.Play("walk");
+
+			if(!playerSprite.FlipH)
+				playerSprite.Offset = new Vector2(3,0);
+			else
+				playerSprite.Offset = new Vector2(-14,0);
+		}
 		else
+		{
 			playerSprite.Play("idle");
+
+			if(!playerSprite.FlipH)
+				playerSprite.Offset = new Vector2(3,0);
+			else
+				playerSprite.Offset = new Vector2(-14,0);
+		}
 	}
 
 	//------------------------helper functions-------------------------------------------

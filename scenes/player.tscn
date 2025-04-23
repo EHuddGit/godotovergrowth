@@ -1,8 +1,7 @@
-[gd_scene load_steps=89 format=3 uid="uid://b03r5xx8dpl3q"]
+[gd_scene load_steps=80 format=3 uid="uid://b03r5xx8dpl3q"]
 
 [ext_resource type="Script" path="res://scripts/Player.cs" id="1_bs7md"]
 [ext_resource type="Texture2D" uid="uid://d6lllfkgm1lj" path="res://assets/player/squad leader shoot.png" id="2_ak4t1"]
-[ext_resource type="Texture2D" uid="uid://d33ljuf2qypmc" path="res://assets/Soldier_1/Run.png" id="4_d5mit"]
 [ext_resource type="Texture2D" uid="uid://bidawjilr75sh" path="res://assets/player/squad leader hand signal.png" id="4_ths8v"]
 [ext_resource type="Texture2D" uid="uid://byoav71a0lpkn" path="res://assets/player/squad leader death.png" id="5_03ajh"]
 [ext_resource type="Texture2D" uid="uid://b4j7qpl7tip5r" path="res://assets/player/squad leader idle.png" id="7_3k7w5"]
@@ -251,38 +250,6 @@ region = Rect2(2400, 0, 150, 150)
 [sub_resource type="AtlasTexture" id="AtlasTexture_qoulp"]
 atlas = ExtResource("7_3k7w5")
 region = Rect2(2550, 0, 150, 150)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_uyh0g"]
-atlas = ExtResource("4_d5mit")
-region = Rect2(0, 0, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_c8ci8"]
-atlas = ExtResource("4_d5mit")
-region = Rect2(128, 0, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_00a43"]
-atlas = ExtResource("4_d5mit")
-region = Rect2(256, 0, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_pf0cy"]
-atlas = ExtResource("4_d5mit")
-region = Rect2(384, 0, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1t6vh"]
-atlas = ExtResource("4_d5mit")
-region = Rect2(512, 0, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_sq8nq"]
-atlas = ExtResource("4_d5mit")
-region = Rect2(640, 0, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_uvvko"]
-atlas = ExtResource("4_d5mit")
-region = Rect2(768, 0, 128, 128)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_kiojh"]
-atlas = ExtResource("4_d5mit")
-region = Rect2(896, 0, 128, 128)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cnqte"]
 atlas = ExtResource("9_spouw")
@@ -536,35 +503,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_uyh0g")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_c8ci8")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_00a43")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_pf0cy")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_1t6vh")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_sq8nq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_uvvko")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_kiojh")
-}],
-"loop": true,
-"name": &"run",
-"speed": 10.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_cnqte")
 }, {
 "duration": 1.0,
@@ -600,7 +538,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vp8ga"]
-size = Vector2(35.6, 146.3)
+size = Vector2(43.4, 146.3)
 
 [node name="player" type="CharacterBody2D"]
 collision_mask = 24
@@ -610,25 +548,24 @@ script = ExtResource("1_bs7md")
 position = Vector2(11, -87)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_8j76l")
-animation = &"attack"
+animation = &"idle"
 autoplay = "idle"
-frame = 4
-offset = Vector2(37, 0)
+offset = Vector2(-14, 0)
 flip_h = true
 
 [node name="playerHitBox" type="CollisionShape2D" parent="."]
-position = Vector2(70.75, -86.4375)
+position = Vector2(4.87501, -80)
 scale = Vector2(1.25, 1.25)
 shape = SubResource("RectangleShape2D_vp8ga")
 
 [node name="muzzleRight" type="Marker2D" parent="."]
-position = Vector2(186, -157)
+position = Vector2(104, -158)
 
 [node name="bulletspawnTimer" type="Timer" parent="."]
 wait_time = 0.34
 one_shot = true
 
 [node name="muzzleLeft" type="Marker2D" parent="."]
-position = Vector2(-16, -156)
+position = Vector2(-104, -158)
 
 [connection signal="animation_finished" from="playerBody" to="." method="animationFinish"]
