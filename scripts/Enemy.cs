@@ -10,11 +10,11 @@ public partial class Enemy : CharacterBody2D
 	public const float PlayerAttackRange = 20.0f;
 	public const float SoldierAttackRange = 20.0f;
 
-	enum States { IDLE, WANDER, FOLLOW, ATTACK, SEEK, DYING };
+	enum States { IDLE, WANDER, FOLLOW, ATTACK, SEEK, DYING, MIDDLE };
 	enum WanderStates { IDLE, MOVING };
 	public enum WanderDirections { LEFT, RIGHT, BOTH };
 	enum ATTACKTARGETS { BARRICADE, SOLDIER, PLAYER };
-	States current = States.WANDER;
+	States current = States.MIDDLE;
 	WanderStates wanderCurrent = WanderStates.MOVING;
 	ATTACKTARGETS attackObjName;
 	float direction = 0;
@@ -55,23 +55,53 @@ public partial class Enemy : CharacterBody2D
 	public void animations()
 	{
 		var body = GetNode<AnimatedSprite2D>("enemyBody");
+		//GD.Print("direction is: " + direction + " body flipped is: " + body.FlipH);
 		if (direction > 0)
-		{
-			body.FlipH = false;
-		}
-		else if (direction < 0)
 		{
 			body.FlipH = true;
 		}
+		else if (direction < 0)
+		{
+			body.FlipH = false;
+		}
 
 		if (direction != 0)
+		{
 			body.Play("walk");
+			
+			if(!body.FlipH)
+				body.Offset = new Vector2(-12,0);
+			else
+				body.Offset = new Vector2(2,0);
+		}
 		else if (current == States.ATTACK)
-			body.Play("attack1");
+		{
+			body.Play("attack");
+			
+			if(!body.FlipH)
+				body.Offset = new Vector2(-1,0);
+			else
+				body.Offset = new Vector2(-9,0);
+		}
 		else if (current == States.DYING)
+		{
 			body.Play("dead");
+			
+			if(!body.FlipH)
+				body.Offset = new Vector2(-17,0);
+			else
+				body.Offset = new Vector2(7,0);
+
+		}
 		else
+		{
 			body.Play("idle");
+			
+			if(!body.FlipH)
+				body.Offset = new Vector2(-10,0);
+			else
+				body.Offset = new Vector2(0,0);
+		}
 	}
 
 	public void damaged(Area2D body)
@@ -101,6 +131,7 @@ public partial class Enemy : CharacterBody2D
 			GD.Print("collided with" + collided.GetPath().ToString());
 			customSignals.EmitSignal(nameof(customSignals.enemyDamage), collided.GetPath().ToString());
 		}
+		GD.Print("animation finished, current state is:" + nameof(States.ATTACK));
 	}
 
 	public void enemyRayCast()
@@ -145,13 +176,10 @@ public partial class Enemy : CharacterBody2D
 		int tempDistance = 0;
 		float currentPosition = GetNode<AnimatedSprite2D>("enemyBody").GlobalPosition.X;
 
-		// if (!IsOnFloor())
-		// {
-		// 	velocity += GetGravity() * (float)delta;
-		// }
-		//where states are checked on
 		if (current == States.DYING)
 			direction = 0;
+		else if(current == States.MIDDLE)
+			seekMiddle();
 		else if (current == States.WANDER)
 			wandering();
 		else if (current == States.FOLLOW)
@@ -172,6 +200,16 @@ public partial class Enemy : CharacterBody2D
 		MoveAndSlide();
 	}
 
+	public void seekMiddle()
+	{
+		var commandMiddle = GetNode<Node2D>("/root/game/SceneManager/testLevel2/backgroundObjects/command");
+		//command ends at 296
+		if(this.GlobalPosition.X > (commandMiddle.GlobalPosition.X + 296))
+			direction = -2;
+		else
+			direction = 2;
+	}
+
 	public void attack()
 	{
 		direction = 0;
@@ -183,8 +221,9 @@ public partial class Enemy : CharacterBody2D
 		{
 			if (!raycast.IsColliding())
 			{
-				current = States.WANDER;
-				wanderCurrent = WanderStates.IDLE;
+				//current = States.WANDER;
+				//wanderCurrent = WanderStates.IDLE;
+				current = States.MIDDLE;
 			}
 			if (difference > 0 && difference > 50)
 				current = States.FOLLOW;
@@ -203,14 +242,11 @@ public partial class Enemy : CharacterBody2D
 		if (currentPosition < 0)
 		{
 			followedirection = -followedirection;
-			//attackDistance = - attackDistance;
 		}
-		//GD.Print("followed direction: " + followedirection);
-		//GD.Print("current position: " + currentPosition + "  > target stopping point: " + (vect.X + attackDistance));
 
-		if (currentPosition <= (vect.X - attackDistance)) // && followedirection > 0)
+		if (currentPosition <= (vect.X - attackDistance)) 
 			direction = 2;
-		else if (currentPosition >= (vect.X + attackDistance))// && followedirection < 0)
+		else if (currentPosition >= (vect.X + attackDistance))
 			direction = -2;
 		else
 		{
@@ -221,13 +257,6 @@ public partial class Enemy : CharacterBody2D
 			}
 		}
 
-		// if( currentPosition < vect.X - attackDistance && currentPosition < vect.X + attackDistance)
-		// 	direction = 2;
-
-		// else if(currentPosition > vect.X - attackDistance && currentPosition > vect.X + attackDistance)
-		// 	direction = -2;
-		// else
-		// 	current = States.ATTACK;
 	}
 
 	public void wandering()

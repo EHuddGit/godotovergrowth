@@ -1,0 +1,16 @@
+-SPRITESHEET INFO-
+
+
+
+FRAME DIMENSIONS:
+
+All: (150x150)px
+
+
+
+FRAMECOUNTS:
+
+-idle: 18
+-walk: 8
+-both attacks: 8
+-death: 6

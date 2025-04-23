@@ -1,0 +1,23 @@
+player
+
+x for idle is 3 for right, -14 for left
+x for attack is -4 for right, -7 for left
+x for command is 2 for right, -13 for left
+x for gather is 2 for right, -13 for left
+x for dying is 40 for right, -51 for left
+
+soldier
+
+x for shoot is 10 for right, -25 for left
+x for idle is -13 for right, -2 for left
+x for walk is -8 for right, -6 for left
+x for dead is 56 for right, -71 for left
+x for gather is -1 for right, -14 for left
+
+deer enemy (deer faces the opposite way)
+
+x for idle is 0 for the left and -10 for right
+x for attack is -9 for the left and -1 for the right
+x for attack2 is -25 for the left and 17 for the right, y is 2
+x for dead is 7 for the left and -17 for the right, y is 4
+x for walking is 2 for the left and -12 for the right

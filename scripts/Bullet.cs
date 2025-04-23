@@ -9,6 +9,7 @@ public partial class Bullet : Node2D
 	public float direction;
 	public float initialPosition;
 	public AnimatedSprite2D bullet;
+	public bool hasHit = false;
 
     public override void _Ready()
     {
@@ -40,6 +41,7 @@ public partial class Bullet : Node2D
 	public void enemyHit(Node2D body)
 	{
 		GD.Print("hit enemy!");
+		
 		this.QueueFree();
 	}
 }

@@ -1,6 +1,56 @@
-[gd_scene load_steps=2 format=3 uid="uid://88yukc1vttg3"]
+[gd_scene load_steps=6 format=3 uid="uid://88yukc1vttg3"]
 
 [ext_resource type="Script" path="res://scripts/LevelUi.cs" id="1_ygkgw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_kyxri"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_86gib"]
+bg_color = Color(0.333333, 0.333333, 0.333333, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0, 0, 0, 0.52549)
+shadow_size = 5
+shadow_offset = Vector2(0, 5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l8qhf"]
+bg_color = Color(0.321728, 0.321728, 0.321728, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0, 0, 0, 0.52549)
+shadow_size = 5
+shadow_offset = Vector2(0, 5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cvojq"]
+bg_color = Color(0.333333, 0.333333, 0.333333, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0, 0, 0, 0.52549)
+shadow_size = 5
+shadow_offset = Vector2(0, 5)
 
 [node name="levelUI" type="Control"]
 layout_mode = 3
@@ -15,9 +65,10 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = 448.0
-offset_right = 491.0
-offset_bottom = 23.0
+offset_left = 208.0
+offset_top = 8.0
+offset_right = 282.0
+offset_bottom = 43.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 25
 text = "Scrap:"
@@ -28,20 +79,37 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -512.0
+offset_top = 8.0
 offset_right = -439.0
-offset_bottom = 35.0
+offset_bottom = 43.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 25
 text = "Score:"
 
 [node name="waveTime" type="Label" parent="."]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
+anchors_preset = -1
 anchor_right = 0.5
-offset_left = -21.5
-offset_right = 21.5
-offset_bottom = 23.0
+offset_left = -176.0
+offset_top = 8.0
+offset_right = -99.0
+offset_bottom = 43.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 25
 text = "Timer:"
+
+[node name="Start" type="Button" parent="."]
+offset_left = 520.0
+offset_right = 607.0
+offset_bottom = 42.0
+size_flags_vertical = 3
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxEmpty_kyxri")
+theme_override_styles/hover = SubResource("StyleBoxFlat_86gib")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_l8qhf")
+theme_override_styles/normal = SubResource("StyleBoxFlat_cvojq")
+text = " pause "
