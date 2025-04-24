@@ -412,9 +412,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_l3mlv")
 }],
-"loop": true,
+"loop": false,
 "name": &"dying",
-"speed": 8.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -548,8 +548,10 @@ script = ExtResource("1_bs7md")
 position = Vector2(11, -87)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_8j76l")
-animation = &"idle"
+animation = &"dying"
 autoplay = "idle"
+frame = 13
+frame_progress = 1.0
 offset = Vector2(-14, 0)
 flip_h = true
 

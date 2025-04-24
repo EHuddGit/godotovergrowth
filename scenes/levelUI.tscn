@@ -99,6 +99,7 @@ theme_override_font_sizes/font_size = 25
 text = "Timer:"
 
 [node name="pause" type="Button" parent="."]
+layout_mode = 0
 offset_left = 520.0
 offset_top = 8.0
 offset_right = 610.0
@@ -121,6 +122,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="ColorRect" type="ColorRect" parent="pauseMenu"]
+visible = false
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -164,13 +166,14 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_86gib")
 theme_override_styles/normal = SubResource("StyleBoxFlat_cvojq")
 text = "Exit"
 
-[node name="deathmenu" type="Control" parent="."]
+[node name="deathMenu" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="deathmenu"]
+[node name="ColorRect" type="ColorRect" parent="deathMenu"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -182,7 +185,7 @@ offset_bottom = 720.0
 grow_horizontal = 2
 color = Color(0.333333, 0, 0, 0.490196)
 
-[node name="pauseMenuBox" type="VBoxContainer" parent="deathmenu"]
+[node name="pauseMenuBox" type="VBoxContainer" parent="deathMenu"]
 process_mode = 2
 layout_mode = 0
 offset_left = -150.0
@@ -191,7 +194,7 @@ offset_right = 150.0
 offset_bottom = 600.0
 theme_override_constants/separation = 25
 
-[node name="gameOverLabel" type="Label" parent="deathmenu/pauseMenuBox"]
+[node name="gameOverLabel" type="Label" parent="deathMenu/pauseMenuBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Game Over
@@ -199,7 +202,7 @@ text = "Game Over
 "
 horizontal_alignment = 1
 
-[node name="exit" type="Button" parent="deathmenu/pauseMenuBox"]
+[node name="exit" type="Button" parent="deathMenu/pauseMenuBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 theme_override_styles/hover = SubResource("StyleBoxFlat_86gib")

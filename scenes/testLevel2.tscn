@@ -830,12 +830,31 @@ scale = Vector2(2, 2)
 position = Vector2(1008, 439)
 scale = Vector2(2, 2)
 
+[node name="Barricade2" parent="backgroundObjects" instance=ExtResource("10_4eni8")]
+position = Vector2(-400, 663)
+rotation = 6.28319
+scale = Vector2(2, 2)
+
+[node name="Crystal3" parent="backgroundObjects" instance=ExtResource("11_78a77")]
+position = Vector2(-968, 618)
+scale = Vector2(2, 2)
+
+[node name="Barricade3" parent="backgroundObjects" instance=ExtResource("10_4eni8")]
+position = Vector2(-1496, 663)
+scale = Vector2(2, 2)
+
+[node name="Barricade4" parent="backgroundObjects" instance=ExtResource("10_4eni8")]
+position = Vector2(2728, 663)
+scale = Vector2(2, 2)
+
+[node name="Crystal4" parent="backgroundObjects" instance=ExtResource("11_78a77")]
+position = Vector2(3352, 618)
+scale = Vector2(2, 2)
+
 [node name="soldiers" type="Node2D" parent="."]
 
 [node name="soldier2" parent="soldiers" instance=ExtResource("11_8qkyi")]
 position = Vector2(345, 631)
-
-[node name="enemies" type="Node" parent="."]
 
 [node name="Player" type="Node" parent="."]
 
@@ -856,11 +875,13 @@ grow_horizontal = 1
 size_flags_horizontal = 4
 size_flags_vertical = 0
 
+[node name="enemies" type="Node" parent="."]
+
 [node name="enemySpawnR" type="Marker2D" parent="."]
-position = Vector2(2744, 610)
+position = Vector2(3960, 610)
 
 [node name="enemySpawnL" type="Marker2D" parent="."]
-position = Vector2(-1656, 610)
+position = Vector2(-2168, 610)
 
 [node name="soldierSpawn" type="Marker2D" parent="."]
 position = Vector2(1008, 632)

@@ -14,7 +14,7 @@ public partial class Player : CharacterBody2D
 	public delegate void TestSignalEventHandler(int value);
 	public const float Speed = 250.0f;
 	public const float JumpVelocity = -400.0f;
-	enum States { IDLE, WALKING, SHOOTING, RUNNING, COMMANDING, GATHERING };
+	enum States { IDLE, WALKING, SHOOTING, RUNNING, COMMANDING, GATHERING , DYING};
 	private PackedScene bullet = ResourceLoader.Load<PackedScene>("res://scenes/bullet.tscn");
 
 	//flags
@@ -28,6 +28,7 @@ public partial class Player : CharacterBody2D
 	private Godot.Collections.Array<bool> objectFollowerSpots;
 	private List<string> followers;
 	private Signals customSignals;
+	int health = 10;
 
 	//----------------------------signals---------------------------------------
 
@@ -66,6 +67,25 @@ public partial class Player : CharacterBody2D
 			finishedCommand = true;
 			signal = false;
 		}
+		else if(current == States.DYING)
+		{
+			GetTree().Paused = true;
+			GetNode<Control>("/root/game/SceneManager/testLevel2/Player/player/Camera2D/levelUI/deathMenu").Show();
+		}
+	}
+
+	public void damaged(string pathid)
+	{
+		if (pathid == this.GetPath().ToString())
+		{
+			health -= 1;
+			GD.Print("enemy hit! health: " + health);
+			if (health <= 0)
+			{
+				GD.Print("should die now");
+				current = States.DYING;
+			}
+		}
 	}
 
 	//---------------------------loop functions----------------------------------------------
@@ -77,6 +97,7 @@ public partial class Player : CharacterBody2D
 		customSignals.followingPlayer += soldierFollowing;
 		customSignals.objectNearby += objectClose;
 		timer.Timeout += bulletspawn;
+		customSignals.enemyDamage += damaged;
 		followers = new List<string>();
 
 	}
@@ -132,6 +153,8 @@ public partial class Player : CharacterBody2D
 			current = States.COMMANDING;
 			playerCommandTask();
 		}
+		else if(health <= 0)
+			current = States.DYING;
 		else
 		{
 			if (current != States.SHOOTING && current != States.COMMANDING && current != States.GATHERING)
@@ -223,7 +246,16 @@ public partial class Player : CharacterBody2D
 		}
 
 		//playing which animation based on the state
-		if (current == States.SHOOTING)
+		if(current == States.DYING)
+		{
+			playerSprite.Play("dying");
+
+			if(!playerSprite.FlipH)
+				playerSprite.Offset = new Vector2(40,0);
+			else
+				playerSprite.Offset = new Vector2(-51,0);
+		}
+		else if (current == States.SHOOTING)
 		{
 			playerSprite.Play("attack");
 

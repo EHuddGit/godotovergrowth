@@ -22,8 +22,10 @@ public partial class LevelUi : Control
 		scrapTotal.Text = "Scrap: 0";
 		pause.Pressed += paused;
 		pauseMenu.Hide();
+		GetNode<Control>("deathMenu").Hide();
 		resumeButton.Pressed += resume;
 		GetNode<Button>("pauseMenu/pauseMenuBox/exit").Pressed += exit;
+		GetNode<Button>("deathMenu/pauseMenuBox/exit").Pressed += exit;
 
 	
 	}

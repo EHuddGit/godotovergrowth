@@ -45,6 +45,9 @@ public partial class Barricade : Node2D
 		barSprite.RegionRect = new Rect2(300,barSprite.RegionRect.Position.Y,barSprite.RegionRect.Size);
 		GD.Print("barsprite new region" + barSprite.RegionRect);
 		healthTag.Text = "health: " + health;
+
+		if(this.GlobalPosition.X < 0)
+			barSprite.FlipH = true;
 		
 	}
 

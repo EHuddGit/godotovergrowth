@@ -32,9 +32,9 @@ position = Vector2(4.5, -2.5)
 shape = SubResource("RectangleShape2D_i0lvl")
 
 [node name="popup" type="Panel" parent="."]
-offset_left = -54.0
+offset_left = -60.0
 offset_top = -108.0
-offset_right = 56.0
+offset_right = 60.0
 offset_bottom = -33.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -45,31 +45,31 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 9.0
 offset_top = 5.0
-offset_right = 799.0
-offset_bottom = 557.0
+offset_right = 1080.0
+offset_bottom = 838.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.1, 0.1)
 
-[node name="header" type="Label" parent="popup/VBoxContainer"]
+[node name="commandHealth" type="Label" parent="popup/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 100
-text = "Soldier cost:"
+text = "Command Health: 200
+
+"
 horizontal_alignment = 1
 
 [node name="upgrade" type="Label" parent="popup/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 100
-text = "15 scrap"
+text = "Soldier cost: 15 scrap"
 horizontal_alignment = 1
 
 [node name="E" type="Label" parent="popup/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 125
-text = "
-E"
+text = "E"
 horizontal_alignment = 1
 vertical_alignment = 2
 

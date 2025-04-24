@@ -33,18 +33,22 @@ where i want to finish:
 
 basically whats left:
 - make sure bullets hit one enemy by turning their collison off on collison //putting this one on hold
-- add the rest of the map
+- add the rest of the map ✓ (might have to adjust size)
 - finish wave system (add a pause button to the wave system)
 - adjust enemy sprites and attack distances ✓ (but the attack is abit off)
 - adjust dumpster sprites ✓
 - have a lose screen that pauses all nodes
 - have both the player and enemy start having health and trigger lose screen
-- have a pause menu that returns back to main menu
+- have a pause menu that returns back to main menu ✓
 
 if i have time:
 - fix glitch with first bullet not spawning
 - add in hit shader
 - have soldiers and enemies spawn on slightly different heights
+- exiting in the pause menu and returning to the game causes issues
+- if its a player death, have the player die animation play then go to lose screen
+- when resource reaches 0, have soldier go back to wandering
 
+- note: did turn on pixel snap to hopefully fix pixel splitting
 
 
