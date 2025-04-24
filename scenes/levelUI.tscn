@@ -98,18 +98,110 @@ grow_horizontal = 2
 theme_override_font_sizes/font_size = 25
 text = "Timer:"
 
-[node name="Start" type="Button" parent="."]
+[node name="pause" type="Button" parent="."]
 offset_left = 520.0
-offset_right = 607.0
-offset_bottom = 42.0
+offset_top = 8.0
+offset_right = 610.0
+offset_bottom = 50.0
 size_flags_vertical = 3
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 25
 theme_override_styles/focus = SubResource("StyleBoxEmpty_kyxri")
 theme_override_styles/hover = SubResource("StyleBoxFlat_86gib")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_l8qhf")
 theme_override_styles/normal = SubResource("StyleBoxFlat_cvojq")
-text = " pause "
+text = " Pause "
+
+[node name="pauseMenu" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="pauseMenu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -660.0
+offset_top = -25.0
+offset_right = 622.0
+offset_bottom = 720.0
+grow_horizontal = 2
+color = Color(0, 0, 0, 0.490196)
+
+[node name="pauseMenuBox" type="VBoxContainer" parent="pauseMenu"]
+process_mode = 2
+visible = false
+layout_mode = 0
+offset_left = -150.0
+offset_top = 200.0
+offset_right = 150.0
+offset_bottom = 600.0
+theme_override_constants/separation = 25
+
+[node name="pauseLabel" type="Label" parent="pauseMenu/pauseMenuBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Paused
+
+"
+horizontal_alignment = 1
+
+[node name="resume" type="Button" parent="pauseMenu/pauseMenuBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_styles/hover = SubResource("StyleBoxFlat_86gib")
+theme_override_styles/normal = SubResource("StyleBoxFlat_cvojq")
+text = "Resume"
+
+[node name="exit" type="Button" parent="pauseMenu/pauseMenuBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_styles/hover = SubResource("StyleBoxFlat_86gib")
+theme_override_styles/normal = SubResource("StyleBoxFlat_cvojq")
+text = "Exit"
+
+[node name="deathmenu" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="deathmenu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -660.0
+offset_top = -25.0
+offset_right = 622.0
+offset_bottom = 720.0
+grow_horizontal = 2
+color = Color(0.333333, 0, 0, 0.490196)
+
+[node name="pauseMenuBox" type="VBoxContainer" parent="deathmenu"]
+process_mode = 2
+layout_mode = 0
+offset_left = -150.0
+offset_top = 200.0
+offset_right = 150.0
+offset_bottom = 600.0
+theme_override_constants/separation = 25
+
+[node name="gameOverLabel" type="Label" parent="deathmenu/pauseMenuBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Game Over
+
+"
+horizontal_alignment = 1
+
+[node name="exit" type="Button" parent="deathmenu/pauseMenuBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_styles/hover = SubResource("StyleBoxFlat_86gib")
+theme_override_styles/normal = SubResource("StyleBoxFlat_cvojq")
+text = "Exit"

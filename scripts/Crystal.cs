@@ -10,7 +10,7 @@ public partial class Crystal : Node2D
 	public Godot.Collections.Array<bool> followerSpots =  new Godot.Collections.Array<bool>{false,false};
 	private int resources = 100;
 	private int currentFrame = 0;
-	private Rect2[] spriteRects = {new Rect2(0f,0f,128f,128f), new Rect2(128f,0f,128f,128f),new Rect2(256f,0f,128f,128f),new Rect2(384f,0f,128f,128f),new Rect2(512f,0f,128f,128f)};
+	private Rect2[] spriteRects = {new Rect2(0f,0f,96f,96f), new Rect2(96f,0f,96f,96f),new Rect2(192f,0f,96f,96f),new Rect2(288f,0f,96f,96f),new Rect2(384f,0f,96f,96f)};
 
 	public override void _Ready()
 	{

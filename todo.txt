@@ -36,6 +36,7 @@ basically whats left:
 - add the rest of the map
 - finish wave system (add a pause button to the wave system)
 - adjust enemy sprites and attack distances ✓ (but the attack is abit off)
+- adjust dumpster sprites ✓
 - have a lose screen that pauses all nodes
 - have both the player and enemy start having health and trigger lose screen
 - have a pause menu that returns back to main menu

@@ -17,8 +17,8 @@ shader_parameter/outline_color = Color(1, 1, 1, 1)
 shader_parameter/onoff = 0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_iaq5q"]
+resource_local_to_scene = true
 atlas = ExtResource("3_lp1jy")
-region = Rect2(0, 0, 96, 96)
 
 [node name="Crystal" type="Node2D"]
 scale = Vector2(1.5, 1.5)
@@ -42,7 +42,7 @@ debug_color = Color(0.149272, 0.556301, 0.872408, 0.42)
 
 [node name="crystalSprite" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_inor3")
-position = Vector2(0.666667, -41.3333)
+position = Vector2(0, -40)
 texture = SubResource("AtlasTexture_iaq5q")
 region_enabled = true
 region_rect = Rect2(0, 0, 96, 96)
