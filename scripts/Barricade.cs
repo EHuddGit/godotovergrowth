@@ -32,14 +32,14 @@ public partial class Barricade : Node2D
 		customSignals.enemyDamage += damage;
 		proximity = false;
 		//manager.BarricadeLocations.Add(GetNode<Sprite2D>("barricadeSprite").GlobalPosition);
-		manager.addBarricade(this);
-		ID = manager.getID();
+		//manager.addBarricade(this);
+		//ID = manager.getID();
 		
-		for(int i = 0; i < manager.getBarricades().Count; i++)
-		{
-			GD.Print("barricade "+ ID + " located at" + manager.getBarricades()[i].GlobalPosition.X);
-		}
-		//barSprite.RegionEnabled = true;
+		//for(int i = 0; i < manager.getBarricades().Count; i++)
+		//{
+			//GD.Print("barricade "+ ID + " located at" + manager.getBarricades()[i].GlobalPosition.X);
+		//}
+		barSprite.RegionEnabled = true;
 		GD.Print("barsprite region enabled" + barSprite.RegionEnabled);
 		GD.Print("barsprite current region" + barSprite.RegionRect);
 		barSprite.RegionRect = new Rect2(300,barSprite.RegionRect.Position.Y,barSprite.RegionRect.Size);
@@ -89,7 +89,8 @@ public partial class Barricade : Node2D
 
 	public void damage(string pathid)
 	{
-		if(pathid ==  GetNode<Area2D>("collisionZone").GetPath())
+		GD.Print(pathid);
+		if(pathid == (this.GetPath().ToString() + "/collisionZone" ))//GetNode<Area2D>("collisionZone").GetPath().ToString())
 		{
 			GD.Print("barricade damaged");
 			health -= 1;

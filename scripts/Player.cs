@@ -107,13 +107,6 @@ public partial class Player : CharacterBody2D
 		//Engine.TimeScale = 0.25;
 		Vector2 velocity = Velocity;
 		float direction = Input.GetAxis("left", "right");
-		
-
-		// Add the gravity.
-		// if (!IsOnFloor())
-		// {
-		// 	velocity += GetGravity() * (float)delta;
-		// }
 
 		stateChange(direction);
 		animations(direction);
@@ -130,11 +123,6 @@ public partial class Player : CharacterBody2D
 		Velocity = velocity;
 		MoveAndSlide();
 	}
-
-
-	//this function should also be running in the process function
-	//need to try and have stateChange only be about states and remove clutter that can be its own functions
-	//shooting should try and be its own function
 	public void stateChange(float direction)
 	{
 

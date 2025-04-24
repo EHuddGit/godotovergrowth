@@ -588,7 +588,7 @@ debug_color = Color(0.321393, 0.614389, 0.331464, 0.42)
 modulate = Color(0.401802, 0.427756, 0.157414, 1)
 position = Vector2(-1, -81)
 target_position = Vector2(500, -1)
-collision_mask = 13
+collision_mask = 12
 
 [node name="bulletspawnL" type="Marker2D" parent="."]
 position = Vector2(-97, -149)

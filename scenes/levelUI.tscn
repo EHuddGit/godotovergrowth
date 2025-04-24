@@ -65,15 +65,16 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = 208.0
-offset_top = 8.0
-offset_right = 282.0
-offset_bottom = 43.0
+offset_left = 73.0
+offset_top = 14.0
+offset_right = 147.0
+offset_bottom = 49.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 25
 text = "Scrap:"
 
-[node name="score" type="Label" parent="."]
+[node name="health" type="Label" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -84,16 +85,16 @@ offset_right = -439.0
 offset_bottom = 43.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 25
-text = "Score:"
+text = "Health:"
 
 [node name="waveTime" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.5
-offset_left = -176.0
-offset_top = 8.0
-offset_right = -99.0
-offset_bottom = 43.0
+offset_left = -323.0
+offset_top = 9.0
+offset_right = -246.0
+offset_bottom = 44.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 25
 text = "Timer:"
@@ -122,7 +123,6 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="ColorRect" type="ColorRect" parent="pauseMenu"]
-visible = false
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -136,7 +136,6 @@ color = Color(0, 0, 0, 0.490196)
 
 [node name="pauseMenuBox" type="VBoxContainer" parent="pauseMenu"]
 process_mode = 2
-visible = false
 layout_mode = 0
 offset_left = -150.0
 offset_top = 200.0

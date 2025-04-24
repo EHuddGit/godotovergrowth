@@ -791,6 +791,8 @@ script = ExtResource("1_whthg")
 [node name="waveTimer" type="Timer" parent="timers"]
 autostart = true
 
+[node name="spawnTimer" type="Timer" parent="timers"]
+
 [node name="tiles" type="Node2D" parent="."]
 
 [node name="background" parent="tiles" instance=ExtResource("1_1l53y")]
@@ -887,4 +889,4 @@ position = Vector2(-2168, 610)
 position = Vector2(1008, 632)
 
 [node name="Enemy" parent="." instance=ExtResource("13_yppvy")]
-position = Vector2(2169, 610)
+position = Vector2(2024, 656)
